@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(servo_control_pkg)
+project(balancing_pkg)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -12,15 +12,6 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 if(BUILD_TESTING)
-	#find_package(rclcpp REQUIRED)
-	#find_package(std_msgs REQUIRED)
-	#add_executable(servo_control src/servo_control.cpp)
-	#ament_target_dependencies(servo_control rclcpp std_msgs)
-	#install(TARGETS
-	#	servo_control
-	#	DESTINATION lib/${PROJECT_NAME})
-
-
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
   # comment the line when a copyright and license is added to all source files
@@ -33,7 +24,3 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
-
-
-
-
