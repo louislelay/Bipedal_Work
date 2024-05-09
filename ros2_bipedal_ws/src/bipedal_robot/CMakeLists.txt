@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(dc_motor_control_pkg)
+project(bipedal_robot)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
