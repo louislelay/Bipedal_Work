@@ -1,0 +1,15 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: true
+
+    pos_cont:
+      type: position_controllers/JointGroupPositionController
+    
+    joint_broad:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+pos_cont:
+  ros__parameters:
+    joints:
+      - rotating_joint
