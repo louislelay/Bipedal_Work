@@ -52,23 +52,27 @@ pluginlib_export_plugin_description_file(hardware_interface raspi_servo_interfac
 # INSTALL
 install(
   DIRECTORY include/
-  DESTINATION include
+  DESTINATION include/${PROJECT_NAME}
 )
+
 install(
-  TARGETS raspi_servo_interface
-  EXPORT export_${PROJECT_NAME}
-  LIBRARY DESTINATION lib
+  DIRECTORY     description/launch      description/config      description/urdf
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY     bringup/launch      bringup/config
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(TARGETS raspi_servo_interface
+  EXPORT export_hardware
   ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
 ## EXPORTS
-ament_export_include_directories(
-  include
-)
-ament_export_libraries(
-  raspi_servo_interface
-)
-ament_export_targets(
-  export_${PROJECT_NAME}
-)
+ament_export_targets(export_hardware HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_package()
