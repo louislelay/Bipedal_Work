@@ -23,7 +23,7 @@ namespace raspi_servo_interface
 
 		public:
 
-			RCLCPP_SHARED_PTR_DEFINITIONS(ServoControlLib);
+			RCLCPP_SHARED_PTR_DEFINITIONS(ServoControlLib)
 
 			RASPI_SERVO_INTERFACE_PUBLIC
 			hardware_interface::CallbackReturn on_init(

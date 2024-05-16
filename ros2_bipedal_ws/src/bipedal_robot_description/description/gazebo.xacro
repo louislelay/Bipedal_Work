@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	
+	<!-- Colors in Gazebo Macro -->
+	<xacro:macro name="colors_macro" params="name color">
+		<gazebo reference="${name}">
+			<material>Gazebo/${color}</material>
+		</gazebo>
+	</xacro:macro>
+
+	<!-- Initialize Colors in Gazebo-->
+	<xacro:colors_macro name="base_link" color="Green"/>
+	<xacro:colors_macro name="right_upper_leg_link" color="Red"/>
+	<xacro:colors_macro name="left_upper_leg_link" color="Red"/>
+	<xacro:colors_macro name="right_lower_leg_link" color="Red"/>
+	<xacro:colors_macro name="left_lower_leg_link" color="Red"/>
+	<xacro:colors_macro name="right_wheel_link" color="Blue"/>
+	<xacro:colors_macro name="left_wheel_link" color="Blue"/>
+
+	<!-- Include Gazebo Plugins -->
+
+    <gazebo>
+        <plugin name="gazebo_ros_joint_state_publisher"
+            filename="libgazebo_ros_joint_state_publisher.so">
+            <update_rate>20</update_rate>
+			<joint_name>hip_right_joint</joint_name>
+			<joint_name>hip_left_joint</joint_name>
+			<joint_name>knee_right_joint</joint_name>
+			<joint_name>knee_left_joint</joint_name>
+			<joint_name>ankle_right_joint</joint_name>
+			<joint_name>ankle_left_joint</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_joint_pose_trajectory"
+            filename="libgazebo_ros_joint_pose_trajectory.so">
+            <update_rate>2</update_rate>
+        </plugin>
+    </gazebo>
+
+	<gazebo>
+		<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+			<alwaysOn>true</alwaysOn>
+			<bodyName>base_footprint</bodyName>
+			<topicName>imu</topicName>
+			<serviceName>imu_service</serviceName>
+			<gaussianNoise>0.0</gaussianNoise>
+			<updateRate>20.0</updateRate>
+		</plugin>
+		<material>Gazebo/White</material>
+	</gazebo>
+
+</robot>

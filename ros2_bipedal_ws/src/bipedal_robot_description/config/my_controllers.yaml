@@ -1,15 +1,30 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100
+    update_rate: 30
     use_sim_time: true
 
-    pos_cont:
+    position_controller:
       type: position_controllers/JointGroupPositionController
     
     joint_broad:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-pos_cont:
+    velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+velocity_controller:
   ros__parameters:
     joints:
-      - rotating_joint
+      - "ankle_right_joint"
+      - "ankle_left_joint"
+
+position_controller:
+  ros__parameters:
+    joints:
+      - "knee_right_joint"
+      - "knee_left_joint"
+      - "hip_right_joint"
+      - "hip_left_joint"
+
+
+      

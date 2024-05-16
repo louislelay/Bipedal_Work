@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="bipedal_robot">
+
+	<xacro:include filename="include.xacro" />
+
+	<!--*** Define Properties ***-->
+
+	<!-- Base Properties -->
+	<xacro:property name="base_length" value="0.2" />
+	<xacro:property name="base_height" value="0.1" />
+	<xacro:property name="base_width" value="0.4" />
+	<xacro:property name="base_mass" value="4" />
+
+	<!-- Leg Properties -->
+	<xacro:property name="leg_length" value="0.08" />
+	<xacro:property name="leg_height" value="0.3" />
+	<xacro:property name="leg_width" value="0.05" />
+	<xacro:property name="angle_max" value="1.57" />
+	<xacro:property name="angle_min" value="-1.57" />
+	<xacro:property name="leg_mass" value="0.5" />
+
+	<!-- Wheel Properties -->
+	<xacro:property name="wheel_radius" value="0.1" />
+	<xacro:property name="wheel_length" value="0.05" />
+	<xacro:property name="wheel_mass" value="1" />
+
+
+	<!--*** Define Macros ***-->
+	
+	<!-- Box Link Macro -->
+	<xacro:macro name="box_macro" params="prefix origin_xyz origin_rpy box_size mass box_color">
+		<link name="${prefix}_link">
+			<visual>
+				<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+				<geometry>
+					<box size="${box_size}" />
+				</geometry>
+				<material name="${box_color}" />
+			</visual>
+			<collision>
+				<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+				<geometry>
+					<box size="${box_size}" />
+				</geometry>
+			</collision>
+			<inertial>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<mass value="${mass}"/>
+				<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+			</inertial>
+		</link>
+	</xacro:macro>
+
+	<!-- Cylinder Link Macro -->
+	<xacro:macro name="cylinder_macro" params="prefix origin_xyz origin_rpy cylinder_radius cylinder_length mass">
+		<link name="${prefix}_link">
+			<visual>
+				<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+				<geometry>
+					<cylinder radius="${cylinder_radius}" length="${cylinder_length}"/>
+				</geometry>
+				<material name="blue"/>
+			</visual>
+			<collision>
+				<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+				<geometry>
+					<cylinder radius="${cylinder_radius}" length="${cylinder_length}"/>
+				</geometry>
+			</collision>
+			<inertial>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<mass value="${mass}"/>
+				<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+			</inertial>
+		</link>
+	</xacro:macro>
+
+	<!-- Revolute Joint Macro -->
+	<xacro:macro name="revolute_macro" params="prefix parent child origin_xyz origin_rpy axis_xyz angle_min angle_max">
+		<joint name="${prefix}_joint" type="revolute">
+			<parent link="${parent}"/>
+			<child link="${child}"/>
+			<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+			<axis xyz="${axis_xyz}"/>
+			<limit lower="${angle_min}" upper="${angle_max}" velocity="100" effort="10"/>
+			<dynamics damping="0.1" friction="0.1"/>
+		</joint>
+	</xacro:macro>
+
+	<!-- Continuous Joint Macro -->
+	<xacro:macro name="continuous_macro" params="prefix parent child origin_xyz origin_rpy axis_xyz">
+		<joint name="${prefix}_joint" type="continuous">
+			<parent link="${parent}"/>
+			<child link="${child}"/>
+			<origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+			<axis xyz="${axis_xyz}"/>
+			<dynamics damping="0.1" friction="0.1"/>
+			<limit velocity="100" effort="10"/>
+		</joint>
+	</xacro:macro>
+
+
+	<!-- Initializing Macro -->
+
+	<!-- Links -->
+	<!-- World -->
+	<xacro:box_macro prefix="base" origin_xyz="0 0 0" origin_rpy="0 0 0" box_size="${base_length} ${base_width} ${base_height}" mass="${base_mass}" box_color="white"/>
+	<!-- Right Leg -->
+	<xacro:box_macro prefix="right_upper_leg" origin_xyz="0 0 ${-leg_height/2+base_height/2}" origin_rpy="0 0 0" box_size="${leg_length} ${leg_width} ${leg_height}" mass="${leg_mass}" box_color="orange"/>
+	<xacro:box_macro prefix="right_lower_leg" origin_xyz="0 0 ${-leg_height/2+base_height/2}" origin_rpy="0 0 0" box_size="${leg_length} ${leg_width} ${leg_height}" mass="${leg_mass}" box_color="orange"/>
+	<xacro:cylinder_macro prefix="right_wheel" origin_xyz="0 0 0" origin_rpy="0 0 0" cylinder_radius="${wheel_radius}" cylinder_length="${wheel_length}" mass="${wheel_mass}"/>
+	<!-- Left Leg -->
+	<xacro:box_macro prefix="left_upper_leg" origin_xyz="0 0 ${-leg_height/2+base_height/2}" origin_rpy="0 0 0" box_size="${leg_length} ${leg_width} ${leg_height}" mass="${leg_mass}" box_color="orange"/>
+	<xacro:box_macro prefix="left_lower_leg" origin_xyz="0 0 ${-leg_height/2+base_height/2}" origin_rpy="0 0 0" box_size="${leg_length} ${leg_width} ${leg_height}" mass="${leg_mass}" box_color="orange"/>
+	<xacro:cylinder_macro prefix="left_wheel" origin_xyz="0 0 0" origin_rpy="0 0 0" cylinder_radius="${wheel_radius}" cylinder_length="${wheel_length}" mass="${wheel_mass}"/>
+	<!-- IMU -->
+	<link name="IMU_link">
+		<inertial>
+			<mass value="0.001"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+		</inertial>
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+			<material name="red"/>  
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size=".01 .01 .01"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<!-- Joints -->
+	<!-- Hip -->
+	<xacro:revolute_macro prefix="hip_right" parent="base_link" child="right_upper_leg_link" origin_xyz="0 ${base_length+leg_width/2} 0" origin_rpy="0 0 0" axis_xyz="0 1 0" angle_min="${angle_min}" angle_max="${angle_max}"/>
+	<xacro:revolute_macro prefix="hip_left" parent="base_link" child="left_upper_leg_link" origin_xyz="0 ${-base_length-leg_width/2} 0" origin_rpy="0 0 0" axis_xyz="0 1 0" angle_min="${angle_min}" angle_max="${angle_max}"/>
+	<!-- Knee -->
+	<xacro:revolute_macro prefix="knee_right" parent="right_upper_leg_link" child="right_lower_leg_link" origin_xyz="0 ${leg_width} ${-leg_height+base_height/2+leg_length/2}" origin_rpy="0 0 0" axis_xyz="0 1 0" angle_min="${angle_min}" angle_max="${angle_max}"/>
+	<xacro:revolute_macro prefix="knee_left" parent="left_upper_leg_link" child="left_lower_leg_link" origin_xyz="0 ${-leg_width} ${-leg_height+base_height/2+leg_length/2}" origin_rpy="0 0 0" axis_xyz="0 1 0" angle_min="${angle_min}" angle_max="${angle_max}"/>
+	<!-- Ankle -->
+	<xacro:continuous_macro prefix="ankle_right" parent="right_lower_leg_link" child="right_wheel_link" origin_xyz="0 ${-leg_width} ${-leg_height+base_height/2+leg_length/2}" origin_rpy="1.57 0 0" axis_xyz="0 0 1"/>
+	<xacro:continuous_macro prefix="ankle_left" parent="left_lower_leg_link" child="left_wheel_link" origin_xyz="0 ${leg_width} ${-leg_height+base_height/2+leg_length/2}" origin_rpy="1.57 0 0" axis_xyz="0 0 1"/>
+	<!-- IMU -->
+	<joint name="IMU_joint" type="fixed">
+		<axis xyz="1 0 0"/>      
+		<origin xyz="0 0 ${base_height/2+0.01/2}"/>
+		<parent link="base_link"/>
+		<child link="IMU_link"/>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.001"/>
+			<inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+		</inertial>
+	</joint>
+
+	<!-- Include Gazebo Description File -->
+	<xacro:include filename="gazebo.xacro" />
+
+	<!-- Include Control File -->
+	<xacro:include filename="ros2_control.xacro" />
+</robot>
