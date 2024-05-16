@@ -1,7 +1,0 @@
-<library path="lib/libraspi_servo_interface">
-  <class name="raspi_servo_interface/RaspiServoInterface" type="raspi_servo_interface::RaspiServoInterface" base_class_type="hardware_interface::RobotHardware">
-    <description>
-      This plugin is for interfacing with a specific servo hardware using ROS2 and hardware_interface.
-    </description>
-  </class>
-</library>
