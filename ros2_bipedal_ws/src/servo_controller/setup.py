@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'bipedal_driver'
+package_name = 'servo_controller'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'servo_interface = bipedal_driver.servo_interface:main',
+            'servo_controller_node = servo_controller.servo_controller_node:main'
         ],
     },
 )
