@@ -6,19 +6,16 @@ def generate_launch_description():
         Node(
             package='mpu6050_publisher',
             executable='mpu6050_node',
-            name='mpu6050_node',
-            output='screen'
+            name='mpu6050_node'
         ),
         Node(
             package='servo_controller',
             executable='servo_controller_node',
-            name='servo_controller_node',
-            output='screen'
+            name='servo_controller_node'
         ),
         Node(
             package='feedback_control',
             executable='2servo_controller',
-            name='2servo_controller',
-            output='screen'
+            name='2servo_controller'
         ),
     ])
