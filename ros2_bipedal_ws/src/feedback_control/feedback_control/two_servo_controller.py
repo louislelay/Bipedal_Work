@@ -54,11 +54,11 @@ class ServoController(Node):
 		# Publish the control signal as the desired angle for the servos
 		command_msg_1 = String()
 		command_msg_1.data = control_signal_1
-		self.angle_publisher.publish(angle_msg)
+		self.angle_publisher.publish(command_msg_1)
 
 		command_msg_2 = String()
 		command_msg_2.data = control_signal_2
-		self.angle_publisher.publish(angle_msg)
+		self.angle_publisher.publish(command_msg_2)
 
 def main(args=None):
 	rclpy.init(args=args)
