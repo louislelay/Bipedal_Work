@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            '2servo_controller = feedback_control.2servo_controller:main',
+            'two_servo_controller = feedback_control.two_servo_controller:main',
         ],
     },
 )

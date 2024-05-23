@@ -15,7 +15,7 @@ def generate_launch_description():
         ),
         Node(
             package='feedback_control',
-            executable='2servo_controller',
-            name='2servo_controller'
+            executable='two_servo_controller',
+            name='two_servo_controller'
         ),
     ])
