@@ -23,7 +23,7 @@ class ServoController(Node):
 		GPIO.setmode(GPIO.BCM)
 
 		for pin in self.servo_pins:
-			GPIO.setup(self.servo_pin, GPIO.OUT)
+			GPIO.setup(self.pin, GPIO.OUT)
 
 		self.pwm1 = GPIO.PWM(self.servo_pins[0], 50)  # 50Hz frequency
 		self.pwm1.start(0)
