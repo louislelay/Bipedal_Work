@@ -6,52 +6,92 @@ import time
 
 class ServoController(Node):
 
-    def __init__(self):
-        super().__init__('servo_controller')
-        self.subscription = self.create_subscription(
-            Float32,
-            'angle_hip_left',
-            self.listener_callback,
-            10)
-        self.subscription  # prevent unused variable warning
+	def __init__(self):
+		super().__init__('servo_controller')
+		self.subscription = self.create_subscription(
+			string, # type of joint (hl, hr, kl, kr) and desired angle 
+			'servo_command',
+			self.command_callback,
+			10)
+		self.subscription  # prevent unused variable warning
 
-        # GPIO setup
-        self.servo_pin = 18  # Change this to your GPIO pin
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.servo_pin, GPIO.OUT)
-        self.pwm = GPIO.PWM(self.servo_pin, 50)  # 50Hz frequency
-        self.pwm.start(0)
 
-    def listener_callback(self, msg):
-        angle = msg.data
-        self.get_logger().info(f'Received angle: {angle}')
-        self.set_servo_angle(angle)
+		# GPIO setup
 
-    def set_servo_angle(self, angle):
-        duty_cycle = self.angle_to_duty_cycle(angle)
-        self.pwm.ChangeDutyCycle(duty_cycle)
-        time.sleep(0.5)  # Allow time for the servo to reach the position
-        self.pwm.ChangeDutyCycle(0)  # Stop sending signals to the servo
+		self.servo_pins = [17, 18, 27, 22]  # Change this to your GPIO pins
 
-    def angle_to_duty_cycle(self, angle):
-        # Convert angle (0-180) to duty cycle (2-12)
-        return 2 + (angle / 18)
+		GPIO.setmode(GPIO.BCM)
 
-    def destroy(self):
-        self.pwm.stop()
-        GPIO.cleanup()
-        super().destroy()
+		for pin in self.servo_pins:
+			GPIO.setup(self.servo_pin, GPIO.OUT)
+
+		self.pwm1 = GPIO.PWM(self.servo_pins[0], 50)  # 50Hz frequency
+		self.pwm1.start(0)
+
+		self.pwm2 = GPIO.PWM(self.servo_pins[1], 50)  # 50Hz frequency
+		self.pwm2.start(0)
+
+		self.pwm3 = GPIO.PWM(self.servo_pins[2], 50)  # 50Hz frequency
+		self.pwm3.start(0)
+
+		self.pwm4 = GPIO.PWM(self.servo_pins[3], 50)  # 50Hz frequency
+		self.pwm4.start(0)
+
+	def command_callback(self, msg):
+
+		command = msg.data
+
+		self.get_logger().info(f'Received command: {command}')
+
+		parts = command.split(':')
+		joint = str(parts[0])
+		angle = int(parts[1])
+
+		if angle > 180 or angle < 0:
+			print('The angle you specified is not between 0 and 180 degrees')
+		elif joint == 'hl':
+			self.set_servo_angle(angle, self.pwm1)
+
+		elif joint == 'hr':
+			self.set_servo_angle(angle, self.pwm2)
+
+		elif joint == 'kl':
+			self.set_servo_angle(angle, self.pwm3)
+
+		elif joint == 'kr':
+			self.set_servo_angle(angle, self.pwm4)
+		else:
+			print('Invalid command, please use : "<hl/hr/kl/kr>:<0 to 180>"')
+			
+
+	def set_servo_angle(self, angle, pwm):
+		duty_cycle = self.angle_to_duty_cycle(angle)
+		pwm.ChangeDutyCycle(duty_cycle)
+		time.sleep(0.5)  # Allow time for the servo to reach the position
+		pwm.ChangeDutyCycle(0)  # Stop sending signals to the servo
+
+	def angle_to_duty_cycle(self, angle):
+		# Convert angle (0-180) to duty cycle (2-12)
+		return 2 + (angle / 18)
+
+	def destroy(self):
+		self.pwm1.stop()
+		self.pwm2.stop()
+		self.pwm3.stop()
+		self.pwm4.stop()
+		GPIO.cleanup()
+		super().destroy()
 
 def main(args=None):
-    rclpy.init(args=args)
-    servo_controller = ServoController()
-    try:
-        rclpy.spin(servo_controller)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        servo_controller.destroy()
-        rclpy.shutdown()
+	rclpy.init(args=args)
+	servo_controller = ServoController()
+	try:
+		rclpy.spin(servo_controller)
+	except KeyboardInterrupt:
+		pass
+	finally:
+		servo_controller.destroy()
+		rclpy.shutdown()
 
 if __name__ == '__main__':
-    main()
+	main()
