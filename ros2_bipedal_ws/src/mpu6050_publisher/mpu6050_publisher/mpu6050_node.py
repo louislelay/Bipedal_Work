@@ -22,21 +22,15 @@ class MPU6050Publisher(Node):
 
 		# Read accelerometer data
 		accel_data = self.sensor.get_accel_data()
-		imu_msg.linear_acceleration.x = accel_data['x']
-		imu_msg.linear_acceleration.y = accel_data['y']
-		imu_msg.linear_acceleration.z = accel_data['z']
+		imu_msg.linear_acceleration.x = accel_data['ax']
+		imu_msg.linear_acceleration.y = accel_data['ay']
+		imu_msg.linear_acceleration.z = accel_data['az']
 
 		# Read gyroscope data
 		gyro_data = self.sensor.get_gyro_data()
-		imu_msg.angular_velocity.x = gyro_data['x']
-		imu_msg.angular_velocity.y = gyro_data['y']
-		imu_msg.angular_velocity.z = gyro_data['z']
-
-		# Orientation is not provided by MPU6050, so we set it to zero
-		imu_msg.orientation.x = 0.0
-		imu_msg.orientation.y = 0.0
-		imu_msg.orientation.z = 0.0
-		imu_msg.orientation.w = 1.0
+		imu_msg.angular_velocity.x = gyro_data['gx']
+		imu_msg.angular_velocity.y = gyro_data['gy']
+		imu_msg.angular_velocity.z = gyro_data['gz']
 
 		# Publish the IMU data
 		self.publisher_.publish(imu_msg)
