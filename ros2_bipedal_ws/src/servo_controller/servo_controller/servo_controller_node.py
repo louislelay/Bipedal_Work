@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32
+from std_msgs.msg import String
 import RPi.GPIO as GPIO
 import time
 
@@ -9,7 +9,7 @@ class ServoController(Node):
 	def __init__(self):
 		super().__init__('servo_controller')
 		self.subscription = self.create_subscription(
-			string, # type of joint (hl, hr, kl, kr) and desired angle 
+			String, # type of joint (hl, hr, kl, kr) and desired angle 
 			'servo_command',
 			self.command_callback,
 			10)
