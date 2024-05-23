@@ -16,3 +16,9 @@ python setup.py install
 
 
 ros2 run mpu6050_publisher mpu6050_node
+
+
+    VCC (Power) to 3.3V or 5V Power Pin
+    GND (Ground) to Ground Pin
+    SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
+    SDA (Data) to GPIO Pin 2 (I2C1 SDA)
