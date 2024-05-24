@@ -90,7 +90,7 @@ class MPU9250Publisher(Node):
 			
 			accel_data = []
 			for _ in range(self.num_samples):
-				accel_data.append(mpu.readAccelerometerMaster()[axis])
+				accel_data.append(self.mpu.readAccelerometerMaster()[axis])
 				time.sleep(0.01)
 			
 			accel_offset = np.mean(accel_data)
