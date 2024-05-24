@@ -48,8 +48,8 @@ class ServoController(Node):
 		self.previous_error = error
 		
 		angle = int(desired_angle)
-		control_signal_1 = "hl" + str(angle)
-		control_signal_2 = "hr" + str(angle)
+		control_signal_1 = "hl:" + str(angle)
+		control_signal_2 = "hr:" + str(angle)
 
 		# Publish the control signal as the desired angle for the servos
 		command_msg_1 = String()
