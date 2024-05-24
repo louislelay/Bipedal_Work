@@ -27,6 +27,8 @@ class MPU9250Publisher(Node):
 
 		self.mpu.configure()  # Apply the settings to the registers.
 
+		self.num_samples=1000
+
 		self.callibrate_gyro()
 		self.callibrate_accel()
 
@@ -57,7 +59,7 @@ class MPU9250Publisher(Node):
 		self.publisher_.publish(msg)
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
-		self.num_samples=1000
+		
 	
 	def callibrate_gyro(self):
 		print("Calibrating gyroscope...")
