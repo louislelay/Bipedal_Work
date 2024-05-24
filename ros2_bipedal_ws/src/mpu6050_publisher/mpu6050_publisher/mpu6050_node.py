@@ -40,40 +40,13 @@ class MPU6050Publisher(Node):
         gz = math.radians(gyro_data['z'])
 
         # Calculate accelerometer angles
-        accel_roll = math.atan2(ay, az)
-        accel_pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
+        roll = math.atan2(ay, az) * 180 / math.pi
+        pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az)) * 180 / math.pi
 
-        # Complementary filter to combine gyroscope and accelerometer data
-        self.roll = self.alpha * (self.roll + gx * dt) + (1 - self.alpha) * accel_roll
-        self.pitch = self.alpha * (self.pitch + gy * dt) + (1 - self.alpha) * accel_pitch
-
-        # Integrate gyroscope z-axis data for yaw
-        self.yaw += gz * dt
-
-        # Convert roll, pitch, yaw to quaternion
-        q = self.euler_to_quaternion(self.roll, self.pitch, self.yaw)
-
-        imu_msg.orientation.x = q[0]
-        imu_msg.orientation.y = q[1]
-        imu_msg.orientation.z = q[2]
-        imu_msg.orientation.w = q[3]
-
-        imu_msg.linear_acceleration.x = ax
-        imu_msg.linear_acceleration.y = ay
-        imu_msg.linear_acceleration.z = az
-
-        imu_msg.angular_velocity.x = gyro_data['x']
-        imu_msg.angular_velocity.y = gyro_data['y']
-        imu_msg.angular_velocity.z = gyro_data['z']
+        imu_msg.orientation.x = roll
+        imu_msg.orientation.y = pitch
 
         self.publisher_.publish(imu_msg)
-
-    def euler_to_quaternion(self, roll, pitch, yaw):
-        qx = math.sin(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) - math.cos(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
-        qy = math.cos(roll/2) * math.sin(pitch/2) * math.cos(yaw/2) + math.sin(roll/2) * math.cos(pitch/2) * math.sin(yaw/2)
-        qz = math.cos(roll/2) * math.cos(pitch/2) * math.sin(yaw/2) - math.sin(roll/2) * math.sin(pitch/2) * math.cos(yaw/2)
-        qw = math.cos(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) + math.sin(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
-        return [qx, qy, qz, qw]
 
 def main(args=None):
     rclpy.init(args=args)
