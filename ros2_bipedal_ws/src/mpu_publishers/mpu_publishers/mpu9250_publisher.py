@@ -29,9 +29,9 @@ class MPU9250Publisher(Node):
 		gyro_data = self.mpu.readGyroscopeMaster()
 		mag_data = self.mpu.readMagnetometerMaster()
 		msg = String()
-		msg.data = f"Accel: {accel_data}, Gyro: {gyro_data}, Mag: {mag_data}"
+		msg.data = f"Accel: {accel_data}, \nGyro: {gyro_data}, \nMag: {mag_data}\n\n"
 		self.publisher_.publish(msg)
-		self.get_logger().info('Publishing: "%s"' % msg.data)
+		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
 def main(args=None):
 	rclpy.init(args=args)
