@@ -22,3 +22,9 @@ ros2 run mpu6050_publisher mpu6050_node
     GND (Ground) to Ground Pin
     SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
     SDA (Data) to GPIO Pin 2 (I2C1 SDA)
+
+
+	sudo apt-get update
+sudo apt-get install python3-pip
+pip3 install smbus2
+pip3 install mpu9250-jmdev

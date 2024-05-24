@@ -8,7 +8,7 @@ import time
 class MPU6050Publisher(Node):
     def __init__(self):
         super().__init__('mpu6050_publisher')
-        self.publisher_ = self.create_publisher(Imu, 'imu/data', 10)
+        self.publisher_ = self.create_publisher(Imu, 'mpu6050_data', 10)
         self.sensor = mpu6050(0x68)
         self.timer = self.create_timer(0.1, self.publish_imu_data)
         

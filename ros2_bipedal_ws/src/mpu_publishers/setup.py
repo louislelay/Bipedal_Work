@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'mpu6050_publisher'
+package_name = 'mpu_publishers'
 
 setup(
     name=package_name,
@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'mpu6050_node = mpu6050_publisher.mpu6050_node:main',
+            'mpu6050_publisher = mpu_publishers.mpu6050_publisher:main',
+			'mpu9250_publisher = mpu_publishers.mpu9250_publisher:main',
         ],
     },
 )
