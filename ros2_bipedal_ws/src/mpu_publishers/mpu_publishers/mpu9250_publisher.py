@@ -74,7 +74,7 @@ class MPU9250Publisher(Node):
 		self.gx_offset, self.gy_offset, self.gz_offset = np.mean(gyro_data, axis=0)
 		
 		print("Calibration complete.")
-		print("Gyroscope offsets: gx_offset={}, gy_offset={}, gz_offset={}".format(gx_offset, gy_offset, gz_offset))
+		print("Gyroscope offsets: gx_offset={}, gy_offset={}, gz_offset={}".format(self.gx_offset, self.gy_offset, self.gz_offset))
 
 	
 	def callibrate_accel(self):
