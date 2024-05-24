@@ -43,8 +43,6 @@ class ServoController(Node):
 
 		self.get_logger().info(f'Received command: {command}')
 
-		if angle > 180 or angle < 0:
-			print('The angle you specified is not between 0 and 180 degrees')
 		if command.startswith('hl'):
 			pwm = self.pwm1
 			parts = command.split(':')
