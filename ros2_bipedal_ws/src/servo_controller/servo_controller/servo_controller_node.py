@@ -55,11 +55,12 @@ class ServoController(Node):
 			self.set_servo_angle(angle_s3, self.pwm3)
 			self.set_servo_angle(angle_s4, self.pwm4)
 
-			if angle > 180 or angle < 0:
-				self.get_logger().info('The angle you specified is not between 0 and 180 degrees')
-				return
-
-			self.set_servo_angle(angle, pwm)
+			for e in parts:
+				angle = int(e)
+				if angle > 180 or angle < 0:
+					self.get_logger().info('The angle you specified is not between 0 and 180 degrees')
+					return
+			
 		except (IndexError, ValueError) as e:
 			self.get_logger().info('Invalid command format. Please use : "<hl_angle>:<hr_angle>:<kl_angle>:<kr_angle>"')
 
