@@ -33,21 +33,7 @@ class ServoController(Node):
 		# Get the roll angle from IMU data
 		roll = msg.orientation.x
 		
-		# Desired roll angle (straight)
-		desired_roll = 0.0
-		
-		# Compute error
-		error = desired_roll - roll
-		
-		# PID control
-		self.integral += error
-		derivative = error - self.previous_error
-		
-		desired_angle = (self.kp * error) + (self.ki * self.integral) + (self.kd * derivative)
-		
-		self.previous_error = error
-		
-		angle = int(desired_angle)
+		angle = int(roll)
 		control_signal = str(angle) + ":" + str(angle) +":0:0"
 
 		# Publish the control signal as the desired angle for the servos
