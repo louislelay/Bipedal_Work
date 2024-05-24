@@ -48,17 +48,12 @@ class ServoController(Node):
 		self.previous_error = error
 		
 		angle = int(desired_angle)
-		control_signal_1 = "hl:" + str(angle)
-		control_signal_2 = "hr:" + str(angle)
+		control_signal = str(angle) + ":" + str(angle) +":0:0"
 
 		# Publish the control signal as the desired angle for the servos
-		command_msg_1 = String()
-		command_msg_1.data = control_signal_1
-		self.angle_publisher.publish(command_msg_1)
-
-		command_msg_2 = String()
-		command_msg_2.data = control_signal_2
-		self.angle_publisher.publish(command_msg_2)
+		command_msg = String()
+		command_msg.data = control_signal
+		self.angle_publisher.publish(command_msg)
 
 def main(args=None):
 	rclpy.init(args=args)
