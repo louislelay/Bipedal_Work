@@ -13,7 +13,7 @@ class MPU6050Publisher(Node):
         self.timer = self.create_timer(0.1, self.publish_imu_data)
         
         self.last_time = time.time()
-        self.alpha = 0.98
+        self.alpha = 0.9
         
         # Initial orientation angles
         self.roll = 0.0
@@ -40,15 +40,16 @@ class MPU6050Publisher(Node):
         gz = math.radians(gyro_data['z'])
 
         # Calculate accelerometer angles
-        accel_roll = math.atan2(ay, az)
-        accel_pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
+        accel_roll = math.atan2(ay, az) * 180 / math.pi
+        accel_pitch = math.atan2(ax, az) * 180 / math.pi
+		
 		# Complementary filter to combine gyroscope and accelerometer data
-        self.roll = self.alpha * (self.roll + gx * dt) + (1 - self.alpha) * accel_roll
-        self.pitch = self.alpha * (self.pitch + gy * dt) + (1 - self.alpha) * accel_pitch
+        self.roll = self.alpha * (self.roll - gx) + (1 - self.alpha) * accel_roll
+        self.pitch = self.alpha * (self.pitch - gy) + (1 - self.alpha) * accel_pitch
 
 
-        imu_msg.orientation.x = self.roll * 180 / math.pi
-        imu_msg.orientation.y = self.pitch * 180 / math.pi
+        imu_msg.orientation.x = self.roll
+        imu_msg.orientation.y = self.pitch
 
 
         self.publisher_.publish(imu_msg)
