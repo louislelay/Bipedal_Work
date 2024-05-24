@@ -29,8 +29,9 @@ class MPU9250Publisher(Node):
 
 		self.num_samples=1000
 
-		self.callibrate_gyro()
-		self.callibrate_accel()
+		# (they're commented bc it was too long to run every times)
+		#self.callibrate_gyro()
+		#self.callibrate_accel()
 
 		self.angle = [0, 0, 0]
 
@@ -39,18 +40,18 @@ class MPU9250Publisher(Node):
 		
 	def timer_callback(self):
 		# Read the accelerometer, gyroscope, and magnetometer uncalibrated values
-		accel_data = self.mpu.readAccelerometerMaster()
-		gyro_data = self.mpu.readGyroscopeMaster()
-		mag_data = self.mpu.readMagnetometerMaster()
+		self.accel_data = self.mpu.readAccelerometerMaster()
+		self.gyro_data = self.mpu.readGyroscopeMaster()
+		self.mag_data = self.mpu.readMagnetometerMaster()
 
-		# Apply the calibration offsets 
-		self.gyro_data[0] -= self.gx_offset
-		self.gyro_data[1] -= self.gy_offset
-		self.gyro_data[2] -= self.gz_offset
+		# Apply the calibration offsets (they're commented bc it was too long to run every times)
+		self.gyro_data[0] -= -1.774 	# self.gx_offset
+		self.gyro_data[1] -= 0.543 		# self.gy_offset
+		self.gyro_data[2] -= 0.188 		# self.gz_offset
 
-		self.accel_data[0] -= self.ax_offset
-		self.accel_data[1] -= self.ay_offset
-		self.accel_data[2] -= self.az_offset
+		self.accel_data[0] -= -1.973 	# self.ax_offset
+		self.accel_data[1] -= -1.994 	# self.ay_offset
+		self.accel_data[2] -= -1.977 	# self.az_offset
 
 		self.calculate_angle()
 
