@@ -42,7 +42,7 @@ class ServoController(Node):
 		command = msg.data
 
 		self.get_logger().info(f'Received command: {command}')
-		
+
         try:
             parts = command.split(':')
             angle = int(parts[1])
@@ -84,7 +84,7 @@ class ServoController(Node):
 		self.pwm3.stop()
 		self.pwm4.stop()
 		GPIO.cleanup()
-		super().destroy()
+		super().destroy_node()
 
 def main(args=None):
 	rclpy.init(args=args)
