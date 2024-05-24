@@ -1,8 +1,12 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
+
 from mpu9250_jmdev.registers import *
 from mpu9250_jmdev.mpu_9250 import MPU9250
+
+import numpy as np
+import time
 
 class MPU9250Publisher(Node):
 	def __init__(self):
@@ -52,13 +56,15 @@ class MPU9250Publisher(Node):
 		msg.data = f"Angle: {self.angle}\n\n"
 		self.publisher_.publish(msg)
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
+
+		self.num_samples=1000
 	
 	def callibrate_gyro(self):
 		print("Calibrating gyroscope...")
 		print("Please keep the sensor stationary during calibration.")
 		
 		gyro_data = []
-		for _ in range(num_samples):
+		for _ in range(self.num_samples):
 			gyro_data.append(self.mpu.readGyroscopeMaster())
 			time.sleep(0.01)
 		
@@ -81,7 +87,7 @@ class MPU9250Publisher(Node):
 			input("Press Enter when ready...")
 			
 			accel_data = []
-			for _ in range(num_samples):
+			for _ in range(self.num_samples):
 				accel_data.append(mpu.readAccelerometerMaster()[axis])
 				time.sleep(0.01)
 			
