@@ -24,7 +24,7 @@ class MPU9250Publisher(Node):
         self.mpu.configure()  # Apply the settings to the registers.
 
     def timer_callback(self):
-        data = self.mpu.get_all_data()
+        data = self.mpu.getAllData()
         msg = String()
         msg.data = f"Accel: {data[1]}, Gyro: {data[0]}, Mag: {data[2]}"
         self.publisher_.publish(msg)
