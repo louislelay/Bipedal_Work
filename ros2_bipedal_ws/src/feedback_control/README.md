@@ -1,0 +1,1 @@
+on part du pcp que le gyroscope = light vers l'avant du rbot
