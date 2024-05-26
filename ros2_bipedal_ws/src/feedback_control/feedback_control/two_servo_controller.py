@@ -35,7 +35,7 @@ class ServoController(Node):
 
 		inital_angle_s = 90
 
-		desired_angle = inital_angle_s + roll
+		desired_angle = inital_angle_s - roll
 
 		angle = int(desired_angle)
 		control_signal = str(angle) + ":" + str(angle) +":0:0"
