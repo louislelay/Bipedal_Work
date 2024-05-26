@@ -56,8 +56,11 @@ class MPU9250Publisher(Node):
 		self.calculate_angle()
 
 		msg = String()
-		msg.data = f"Angle: {self.angle}\n\n"
+
+		msg.data = str(self.angle[0]) + ":" + str(self.angle[1]) + ":" + str(self.angle[2])
+
 		self.publisher_.publish(msg)
+
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
 		

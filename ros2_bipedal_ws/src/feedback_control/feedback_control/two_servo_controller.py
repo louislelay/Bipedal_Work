@@ -30,7 +30,11 @@ class ServoController(Node):
 		
 	def imu_callback(self, msg):
 		# Get the roll angle from IMU data
-		roll = msg.angle[0]
+		angles = msg.data
+
+		parts = angles.split(':')
+
+		roll = int(parts[0])
 
 		inital_angle_s = 90
 
