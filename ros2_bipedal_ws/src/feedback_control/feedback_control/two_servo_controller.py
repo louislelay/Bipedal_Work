@@ -34,7 +34,7 @@ class ServoController(Node):
 
 		parts = angles.split(':')
 
-		roll = int(parts[0])
+		roll = int(float(parts[0]))
 
 		inital_angle_s = 90
 
