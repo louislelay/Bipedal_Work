@@ -45,10 +45,16 @@ class ServoController(Node):
 
 		try:
 			parts = command.split(':')
+
+			if length(parts) != 4:
+				self.get_logger().info('Incorrect command : Are you sure you typed "angle_hl:angle_hr:angle_kl:angle_kr"')
+				return
+			
+			# Selecting the angles and correcting them to respect the model I want
 			angle_s1 = int(parts[0])
-			angle_s2 = int(parts[1])
+			angle_s2 = 180-int(parts[1])
 			angle_s3 = int(parts[2])
-			angle_s4 = int(parts[3])
+			angle_s4 = 180-int(parts[3])
 
 			for e in parts:
 				angle = int(e)
