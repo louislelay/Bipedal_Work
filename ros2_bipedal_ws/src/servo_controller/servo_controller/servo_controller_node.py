@@ -46,7 +46,7 @@ class ServoController(Node):
 		try:
 			parts = command.split(':')
 
-			if length(parts) != 4:
+			if len(parts) != 4:
 				self.get_logger().info('Incorrect command : Are you sure you typed "angle_hl:angle_hr:angle_kl:angle_kr"')
 				return
 			
