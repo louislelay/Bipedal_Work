@@ -4,9 +4,9 @@ from launch_ros.actions import Node
 def generate_launch_description():
     return LaunchDescription([
         Node(
-            package='mpu6050_publisher',
-            executable='mpu6050_node',
-            name='mpu6050_node'
+            package='mpu_publishers',
+            executable='mpu9250_publisher',
+            name='mpu9250_publisher'
         ),
         Node(
             package='servo_controller',

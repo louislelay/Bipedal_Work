@@ -1,6 +1,5 @@
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Imu
 from std_msgs.msg import String
 import numpy as np
 
@@ -10,8 +9,8 @@ class ServoController(Node):
 		
 		# Subscribe to IMU data
 		self.imu_subscription = self.create_subscription(
-			Imu,
-			'imu/data',
+			String,
+			'mpu9250_data',
 			self.imu_callback,
 			10)
 		
@@ -31,7 +30,7 @@ class ServoController(Node):
 		
 	def imu_callback(self, msg):
 		# Get the roll angle from IMU data
-		roll = msg.orientation.x
+		roll = msg.angle[0]
 
 		inital_angle_s = 90
 
