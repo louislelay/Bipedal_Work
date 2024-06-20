@@ -15,7 +15,7 @@ Modelized on Solidworks, every parts are to be 3d printed. And this is the list 
 
 ![CAD model](medias/bipedal_robot_cad.png)
 
-![Real Robot](medias/bipedal_robot_cad.png)
+![Real Robot](medias/bipedal_robot_real.png)
 
 ## Software
 
