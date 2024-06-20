@@ -31,7 +31,7 @@ To test it, open a first terminal and type :
 cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
 source /opt/ros2/humble/setup.bash
 source install/setup.bash
-run servo_controller servo_controller_node
+ros2 run servo_controller servo_controller_node
 ```
 
 And in a second one :
@@ -58,10 +58,10 @@ pip3 install mpu6050-raspberrypi
 
 And make always sure : 
 
-    VCC (Power) to 3.3V or 5V Power Pin
-    GND (Ground) to Ground Pin
-    SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
-    SDA (Data) to GPIO Pin 2 (I2C1 SDA)
+VCC (Power) to 3.3V or 5V Power Pin
+GND (Ground) to Ground Pin
+SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
+SDA (Data) to GPIO Pin 2 (I2C1 SDA)
 
 To test it, open a first terminal and type :
 
@@ -79,3 +79,38 @@ source /opt/ros2/humble/setup.bash
 source install/setup.bash
 ros2 topic echo /mpu[here the version you use]_data
 ```
+
+### Package dc_controller
+
+Subscribe from a topic name 'servo_command' and get an information under the format : "info_hl:info_r"
+
+To test it, open a first terminal and type :
+
+```
+cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
+source /opt/ros2/humble/setup.bash
+source install/setup.bash
+ros2 run dc_controller dc_controller_node
+```
+
+And in a second one :
+```
+cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
+source /opt/ros2/humble/setup.bash
+source install/setup.bash
+ros2 topic pub /dc_command std_msgs/msg/String "{data: "2:-2"}"
+```
+
+### Package feedback_control
+
+Use the three first packages to keep the robot well balanced.
+
+To test it, open a terminal and type :
+
+```
+cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
+source /opt/ros2/humble/setup.bash
+source install/setup.bash
+ros2 run feedback_control balance
+```
+
