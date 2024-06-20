@@ -58,13 +58,10 @@ pip3 install mpu6050-raspberrypi
 
 And make always sure : 
 
-VCC (Power) to 3.3V or 5V Power Pin
-
-GND (Ground) to Ground Pin
-
-SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
-
-SDA (Data) to GPIO Pin 2 (I2C1 SDA)
+ - VCC (Power) to 3.3V or 5V Power Pin
+ - GND (Ground) to Ground Pin
+ - SCL (Clock) to GPIO Pin 3 (I2C1 SCL)
+ - SDA (Data) to GPIO Pin 2 (I2C1 SDA)
 
 To test it, open a first terminal and type :
 
