@@ -21,12 +21,24 @@ Modelized on Solidworks, every parts are to be 3d printed. And this is the list 
 
 Programmed using ROS2 and python. Created 4 packages.
 
-After installing ROS2. Source ROS2 and then source the workspace.
-
 ### Package servo_controller
 
 Subscribe from a topic name 'servo_command' and get an information under the format : "angle_hl:angle_hr:angle_kl:angle_kr"
 
 To test it, open a first terminal and type :
 
-'''ros2 run servo_controller servo_controller_node'''
+```
+cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
+source /opt/ros2/humble/setup.bash
+source install/setup.bash
+run servo_controller servo_controller_node
+```
+
+And in a second one :
+```
+cd GO/TO/PATH/Bipedal_Work/ros2_bipedal_ws/
+source /opt/ros2/humble/setup.bash
+source install/setup.bash
+ros2 topic pub /servo_command std_msgs/msg/String "{data: "90:90:90:90"}"
+```
+
