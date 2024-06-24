@@ -13,4 +13,4 @@ GPIO.setup(encoder_pin_B, GPIO.IN)
 while True:
 	print(GPIO.input(encoder_pin_A))
 	print(GPIO.input(encoder_pin_A))
-	sleep(0.1)
+	time.sleep(0.1)
