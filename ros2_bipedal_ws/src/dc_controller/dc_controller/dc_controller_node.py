@@ -44,14 +44,14 @@ class DCController(Node):
 
 		# GPIO setup
 		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(EN_A, GPIO.OUT)
-		GPIO.setup(IN_1, GPIO.OUT)
-		GPIO.setup(IN_2, GPIO.OUT)
-		GPIO.setup(ENC_A1, GPIO.IN)
-		GPIO.setup(ENC_A2, GPIO.IN)
+		GPIO.setup(self.EN_A, GPIO.OUT)
+		GPIO.setup(self.IN_1, GPIO.OUT)
+		GPIO.setup(self.IN_2, GPIO.OUT)
+		GPIO.setup(self.ENC_A1, GPIO.IN)
+		GPIO.setup(self.ENC_A2, GPIO.IN)
 
 		# Initialize PWM
-		self.pwm = GPIO.PWM(EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+		self.pwm = GPIO.PWM(self.EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
 		self.pwm.start(0)
 
 		# Initialize encoder
