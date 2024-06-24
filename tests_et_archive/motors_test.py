@@ -25,10 +25,12 @@ pwmA.start(0)
 pwmB.start(0)
 
 
-pwmA.ChangeDutyCycle(1000)
-pwmB.ChangeDutyCycle(1000)
-GPIO.output(in1, GPIO.HIGH)
-GPIO.output(in2, GPIO.LOW)
-GPIO.output(in3, GPIO.LOW)
-GPIO.output(in4, GPIO.LOW)
 
+while True:
+	pwmA.ChangeDutyCycle(1000)
+	pwmB.ChangeDutyCycle(1000)
+	GPIO.output(in1, GPIO.HIGH)
+	GPIO.output(in2, GPIO.LOW)
+	GPIO.output(in3, GPIO.LOW)
+	GPIO.output(in4, GPIO.LOW)
+	time.sleep(1)
