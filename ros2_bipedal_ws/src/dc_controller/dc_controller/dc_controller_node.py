@@ -68,10 +68,10 @@ class DCController(Node):
 		self.setpoint = int(command)
 
 		self.abs_duration = abs(duration)
-        self.compute_pid()  # Compute the PID output
-        self.advance()  # Drive motor forward
-        print(f"Pulse: {self.duration}")
-        self.duration = 0  # Reset duration for next count
+		self.compute_pid()  # Compute the PID output
+		self.advance()  # Drive motor forward
+		print(f"Pulse: {self.duration}")
+		self.duration = 0  # Reset duration for next count
 		#time.sleep(0.1)  # Sleep for 100ms
 
 	def encoder_callback(self, channel):
@@ -119,7 +119,7 @@ class DCController(Node):
 	
 	def destroy(self):
 		self.pwm.stop()
-    	GPIO.cleanup()
+		GPIO.cleanup()
 
 def main(args=None):
 	rclpy.init(args=args)
