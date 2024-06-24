@@ -3,7 +3,7 @@ import time
 
 # Define GPIO pins for encoder A and B outputs
 encoder_pin_A = 17
-encoder_pin_B = 18
+encoder_pin_B = 27
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
