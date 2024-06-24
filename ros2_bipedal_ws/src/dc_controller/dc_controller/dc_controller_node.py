@@ -7,7 +7,7 @@ import time
 class DCController(Node):
 
 	def __init__(self):
-		super().__init__('servo_controller')
+		super().__init__('dc_controller')
 		self.subscription = self.create_subscription(
 			String, # type of joint (wl, wr) and desired speed
 			'dc_command',
@@ -116,6 +116,10 @@ class DCController(Node):
 
 	def stop(self):
 		self.pwm.ChangeDutyCycle(0)
+	
+	def destroy(self):
+		self.pwm.stop()
+    	GPIO.cleanup()
 
 def main(args=None):
 	rclpy.init(args=args)
@@ -130,89 +134,3 @@ def main(args=None):
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import RPi.GPIO as GPIO
-import time
-
-# Constants for GPIO pins
-
-
-def encoder_callback(channel):
-    global encoder0PinALast, duration, Direction
-
-    Lstate = GPIO.input(ENCODER_PIN_A)
-    if (encoder0PinALast == GPIO.LOW) and Lstate == GPIO.HIGH:
-        val = GPIO.input(ENCODER_PIN_B)
-        if val == GPIO.LOW and Direction:
-            Direction = False  # Reverse
-        elif val == GPIO.HIGH and not Direction:
-            Direction = True  # Forward
-
-    encoder0PinALast = Lstate
-
-    if not Direction:
-        duration += 1
-    else:
-        duration -= 1
-
-def compute_pid():
-    global last_error, integral, last_time, self.output
-    
-    current_time = time.time()
-    dt = current_time - last_time
-    
-    error = Setpoint - abs_duration
-    integral += error * dt
-    derivative = (error - last_error) / dt if dt > 0 else 0
-    
-    self.output = Kp * error + Ki * integral + Kd * derivative
-    self.output = max(0, min(100, self.output))  # Clamp self.output to range 0-100
-    
-    last_error = error
-    last_time = current_time
-
-
-
-# Initialize encoder
-GPIO.add_event_detect(ENCODER_PIN_A, GPIO.BOTH, callback=encoder_callback)
-
-try:
-    while True:
-        abs_duration = abs(duration)
-        compute_pid()  # Compute the PID output
-        advance()  # Drive motor forward
-        print(f"Pulse: {duration}")
-        duration = 0  # Reset duration for next count
-
-        time.sleep(0.1)  # Sleep for 100ms
-
-except KeyboardInterrupt:
-    pass
-
-finally:
-    pwm.stop()
-    GPIO.cleanup()
