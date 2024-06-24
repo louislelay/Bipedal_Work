@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'dc_controller_node = dc_controller.dc_controller_node:main'
         ],
     },
 )
