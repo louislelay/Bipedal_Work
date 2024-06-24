@@ -55,7 +55,7 @@ class DCController(Node):
 		self.pwm.start(0)
 
 		# Initialize encoder
-		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=encoder_callback)
+		#GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=encoder_callback)
 
 		
 
