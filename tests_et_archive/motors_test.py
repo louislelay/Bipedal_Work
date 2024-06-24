@@ -1,76 +1,82 @@
-import RPi.GPIO as GPIO
-import time
+import RPi.GPIO as GPIO          
+from time import sleep
 
-# Pin Definitions
-enA = 22
 in1 = 26
 in2 = 6
-in3 = 12
-in4 = 16
-enB = 5
+en = 22
+temp1=1
 
-# GPIO setup
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(enA, GPIO.OUT)
-GPIO.setup(in1, GPIO.OUT)
-GPIO.setup(in2, GPIO.OUT)
-GPIO.setup(in3, GPIO.OUT)
-GPIO.setup(in4, GPIO.OUT)
-GPIO.setup(enB, GPIO.OUT)
+GPIO.setup(in1,GPIO.OUT)
+GPIO.setup(in2,GPIO.OUT)
+GPIO.setup(en,GPIO.OUT)
+GPIO.output(in1,GPIO.LOW)
+GPIO.output(in2,GPIO.LOW)
+p=GPIO.PWM(en,1000)
+p.start(25)
+print("\n")
+print("The default speed & direction of motor is LOW & Forward.....")
+print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
+print("\n")    
 
-# Set PWM
-pwmA = GPIO.PWM(enA, 1000)
-pwmB = GPIO.PWM(enB, 1000)
-pwmA.start(0)
-pwmB.start(0)
+while(1):
 
-def set_motor_a(speed, direction):
-    pwmA.ChangeDutyCycle(speed)
-    if direction == "forward":
-        GPIO.output(in1, GPIO.HIGH)
-        GPIO.output(in2, GPIO.LOW)
-    elif direction == "backward":
-        GPIO.output(in1, GPIO.LOW)
-        GPIO.output(in2, GPIO.HIGH)
+    x=raw_input()
+    
+    if x=='r':
+        print("run")
+        if(temp1==1):
+         GPIO.output(in1,GPIO.HIGH)
+         GPIO.output(in2,GPIO.LOW)
+         print("forward")
+         x='z'
+        else:
+         GPIO.output(in1,GPIO.LOW)
+         GPIO.output(in2,GPIO.HIGH)
+         print("backward")
+         x='z'
 
-def set_motor_b(speed, direction):
-    pwmB.ChangeDutyCycle(speed)
-    if direction == "forward":
-        GPIO.output(in3, GPIO.HIGH)
-        GPIO.output(in4, GPIO.LOW)
-    elif direction == "backward":
-        GPIO.output(in3, GPIO.LOW)
-        GPIO.output(in4, GPIO.HIGH)
 
-def stop_motors():
-    pwmA.ChangeDutyCycle(0)
-    pwmB.ChangeDutyCycle(0)
-    GPIO.output(in1, GPIO.LOW)
-    GPIO.output(in2, GPIO.LOW)
-    GPIO.output(in3, GPIO.LOW)
-    GPIO.output(in4, GPIO.LOW)
-
-try:
-    while True:
-        set_motor_a(75, "forward")
-        set_motor_b(75, "forward")
-        print("forward")
-        time.sleep(5)
-
-        set_motor_a(75, "backward")
-        set_motor_b(75, "backward")
-        print("backward")
-        time.sleep(5)
-
-        stop_motors()
+    elif x=='s':
         print("stop")
-        time.sleep(2)
+        GPIO.output(in1,GPIO.LOW)
+        GPIO.output(in2,GPIO.LOW)
+        x='z'
 
-except KeyboardInterrupt:
-    pass
+    elif x=='f':
+        print("forward")
+        GPIO.output(in1,GPIO.HIGH)
+        GPIO.output(in2,GPIO.LOW)
+        temp1=1
+        x='z'
 
-finally:
-    stop_motors()
-    pwmA.stop()
-    pwmB.stop()
-    GPIO.cleanup()
+    elif x=='b':
+        print("backward")
+        GPIO.output(in1,GPIO.LOW)
+        GPIO.output(in2,GPIO.HIGH)
+        temp1=0
+        x='z'
+
+    elif x=='l':
+        print("low")
+        p.ChangeDutyCycle(25)
+        x='z'
+
+    elif x=='m':
+        print("medium")
+        p.ChangeDutyCycle(50)
+        x='z'
+
+    elif x=='h':
+        print("high")
+        p.ChangeDutyCycle(75)
+        x='z'
+     
+    
+    elif x=='e':
+        GPIO.cleanup()
+        break
+    
+    else:
+        print("<<<  wrong data  >>>")
+        print("please enter the defined data to continue.....")
