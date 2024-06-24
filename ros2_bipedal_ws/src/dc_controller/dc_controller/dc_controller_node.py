@@ -67,7 +67,7 @@ class DCController(Node):
 
 		self.setpoint = int(command)
 
-		self.abs_duration = abs(duration)
+		self.abs_duration = abs(self.duration)
 		self.compute_pid()  # Compute the PID output
 		self.advance()  # Drive motor forward
 		print(f"Pulse: {self.duration}")
