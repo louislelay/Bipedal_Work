@@ -27,8 +27,8 @@ pwmB.start(0)
 
 
 while True:
-	pwmA.ChangeDutyCycle(1000)
-	pwmB.ChangeDutyCycle(1000)
+	pwmA.ChangeDutyCycle(100)
+	pwmB.ChangeDutyCycle(100)
 	GPIO.output(in1, GPIO.HIGH)
 	GPIO.output(in2, GPIO.LOW)
 	GPIO.output(in3, GPIO.LOW)
