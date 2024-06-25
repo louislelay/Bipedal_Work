@@ -43,7 +43,8 @@ class Balance(Node):
 		t_next = t+10
 
 		# Get the roll angle from IMU data
-		roll = msg.data
+		roll = int(float(msg.data))
+
 
 		vit_mot = int(self.PID(roll))
 		print("vit_mot : "+ vit_mot)
