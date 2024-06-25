@@ -51,9 +51,9 @@ class Balance(Node):
 		self.dc_publisher.publish(command_msg)
 
 	def PID(self, input):
-		Kp = 10
+		Kp = 2
 		Ki = 0
-		Kd = 5
+		Kd = 2
 
 		P = Kp * float(input)
 		self.I += Ki * float(input)
