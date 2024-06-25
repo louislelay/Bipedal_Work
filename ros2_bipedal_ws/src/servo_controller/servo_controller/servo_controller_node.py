@@ -18,14 +18,14 @@ class ServoController(Node):
 
 		# GPIO setup
 
-		self.servo_pins = [25, 18, 24, 23]  # Change this to your GPIO pins
+		self.servo_pins = [8, 18, 24, 23]  # Change this to your GPIO pins
 
 		GPIO.setmode(GPIO.BCM)
 
 		for pin in self.servo_pins:
 			GPIO.setup(pin, GPIO.OUT)
 
-		self.pwm1 = GPIO.PWM(self.servo_pins[0], 50)  # 50Hz frequency
+		self.pwm1 = GPIO.PWM(self.servo_pins[0], 50)  # 50Hz frequency 
 		self.pwm1.start(0)
 
 		self.pwm2 = GPIO.PWM(self.servo_pins[1], 50)  # 50Hz frequency
@@ -82,7 +82,7 @@ class ServoController(Node):
 		duty_cycle = self.angle_to_duty_cycle(angle)
 		pwm.ChangeDutyCycle(duty_cycle)
 		time.sleep(0.5)  # Allow time for the servo to reach the position
-		pwm.ChangeDutyCycle(0)  # Stop sending signals to the servo
+		#pwm.ChangeDutyCycle(0)  # Stop sending signals to the servo
 
 	def angle_to_duty_cycle(self, angle):
 		# Convert angle (0-180) to duty cycle (2-12)
