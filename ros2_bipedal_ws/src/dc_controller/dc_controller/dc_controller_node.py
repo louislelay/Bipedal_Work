@@ -24,6 +24,10 @@ class DCController(Node):
 		self.IN_1 = 26         # GPIO pin for L298N direction of Motor A
 		self.IN_2 = 6          # GPIO pin for L298N direction of Motor A
 
+		self.EN_B = 22         # GPIO pin for L298N enable of Motor A
+		self.IN_3 = 26         # GPIO pin for L298N direction of Motor A
+		self.IN_4 = 6          # GPIO pin for L298N direction of Motor A
+
 		# Variables for encoder
 		self.enc_A1_last = GPIO.LOW
 		self.duration = 0
@@ -47,12 +51,21 @@ class DCController(Node):
 		GPIO.setup(self.EN_A, GPIO.OUT)
 		GPIO.setup(self.IN_1, GPIO.OUT)
 		GPIO.setup(self.IN_2, GPIO.OUT)
+
+		GPIO.setup(self.EN_B, GPIO.OUT)
+		GPIO.setup(self.IN_3, GPIO.OUT)
+		GPIO.setup(self.IN_4, GPIO.OUT)
+
 		GPIO.setup(self.ENC_A1, GPIO.IN)
 		GPIO.setup(self.ENC_A2, GPIO.IN)
 
-		# Initialize PWM
-		self.pwm = GPIO.PWM(self.EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
-		self.pwm.start(0)
+		# Initialize PWMA
+		self.pwmA = GPIO.PWM(self.EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+		self.pwmA.start(0)
+
+		# Initialize PWMB
+		self.pwmB = GPIO.PWM(self.EN_B, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+		self.pwmB.start(0)
 
 		# Initialize encoder
 		#GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=encoder_callback)
@@ -112,22 +125,35 @@ class DCController(Node):
 		self.last_time = current_time
 
 	def advance(self):
-		self.pwm.ChangeDutyCycle(self.output)
+		self.pwmA.ChangeDutyCycle(self.output)
 		GPIO.output(self.IN_1, GPIO.HIGH)
 		GPIO.output(self.IN_2, GPIO.LOW)
 
+		self.pwmB.ChangeDutyCycle(self.output)
+		GPIO.output(self.IN_3, GPIO.HIGH)
+		GPIO.output(self.IN_4, GPIO.LOW)
+
 	def back(self):
-		self.pwm.ChangeDutyCycle(self.output)
+		self.pwmA.ChangeDutyCycle(self.output)
 		GPIO.output(self.IN_1, GPIO.LOW)
 		GPIO.output(self.IN_2, GPIO.HIGH)
 
+		self.pwmB.ChangeDutyCycle(self.output)
+		GPIO.output(self.IN_3, GPIO.LOW)
+		GPIO.output(self.IN_4, GPIO.HIGH)
+
 	def stop(self):
-		self.pwm.ChangeDutyCycle(0)
+		self.pwmA.ChangeDutyCycle(0)
 		GPIO.output(self.IN_1, GPIO.LOW)
 		GPIO.output(self.IN_2, GPIO.LOW)
+
+		self.pwmB.ChangeDutyCycle(0)
+		GPIO.output(self.IN_3, GPIO.LOW)
+		GPIO.output(self.IN_4, GPIO.LOW)
 	
 	def destroy(self):
-		self.pwm.stop()
+		self.pwmA.stop()
+		self.pwmB.stop()
 		GPIO.cleanup()
 
 def main(args=None):
