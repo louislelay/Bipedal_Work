@@ -12,9 +12,7 @@ import math
 class MPU9250Publisher(Node):
 	def __init__(self):
 		super().__init__('mpu9250_publisher')
-		self.publisher_ = self.create_publisher(String, 'mpu9250_data', 30)
-		timer_period = 1.0  # seconds
-		self.timer = self.create_timer(timer_period, self.timer_callback)
+		self.publisher_ = self.create_publisher(String, 'mpu9250_data', 10)
 		
 		self.mpu = MPU9250(
 			address_ak=AK8963_ADDRESS, 
@@ -31,14 +29,11 @@ class MPU9250Publisher(Node):
 		self.pitch = 0
 		self.roll = 0
 
-		self.last_time = time.time()
-
 		
 	def timer_callback(self):
 		# Read the accelerometer, gyroscope, and magnetometer uncalibrated values
 		self.accel_data = self.mpu.readAccelerometerMaster()
 		self.gyro_data = self.mpu.readGyroscopeMaster()
-		self.mag_data = self.mpu.readMagnetometerMaster()
 
 		self.filtered_pitch_roll()
 

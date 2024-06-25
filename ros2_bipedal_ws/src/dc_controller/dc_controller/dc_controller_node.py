@@ -12,7 +12,7 @@ class DCController(Node):
 			String, # type of joint (wl, wr) and desired speed
 			'dc_command',
 			self.command_callback,
-			30)
+			10)
 		self.subscription  # prevent unused variable warning
 
 
@@ -77,7 +77,7 @@ class DCController(Node):
 
 		print(f"Pulse: {self.duration}")
 		self.duration = 0  # Reset duration for next count
-		time.sleep(1/30)  # Sleep for 100ms
+		time.sleep(1/10)  # Sleep for 100ms
 
 	def encoder_callback(self, channel):
 		Lstate = GPIO.input(self.ENC_A1)
