@@ -29,6 +29,7 @@ class MPU9250Publisher(Node):
 		self.mpu.configure()  # Apply the settings to the registers.
 
 		self.pitch = 0
+		self.roll = 0
 
 		self.last_time = time.time()
 
@@ -39,11 +40,11 @@ class MPU9250Publisher(Node):
 		self.gyro_data = self.mpu.readGyroscopeMaster()
 		self.mag_data = self.mpu.readMagnetometerMaster()
 
-		self.filtered_pitch()
+		self.filtered_roll()
 
 		msg = String()
 
-		msg.data = str(self.pitch)
+		msg.data = str(self.pitch + self.roll)
 
 		self.publisher_.publish(msg)
 
@@ -54,6 +55,10 @@ class MPU9250Publisher(Node):
 		GyrYd = float(GyrYd) / 100
 		pitchGyr = float(self.pitch - GyrYd)
 		pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
+
+			# Calculate roll (rotation around the x-axis)
+		self.roll = np.arctan2(ay, az)
+		self.roll = np.degrees(self.roll)
 
 		self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
 
