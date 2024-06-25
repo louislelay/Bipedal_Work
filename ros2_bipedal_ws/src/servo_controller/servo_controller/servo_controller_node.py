@@ -37,7 +37,7 @@ class ServoController(Node):
 		self.pwm4 = GPIO.PWM(self.servo_pins[3], 50)  # 50Hz frequency
 		self.pwm4.start(0)
 
-		self.prev_angles = [0, 0, 0, 0]
+		self.prev_angles = [-999, -999, -999, -999]
 
 	def command_callback(self, msg):
 
