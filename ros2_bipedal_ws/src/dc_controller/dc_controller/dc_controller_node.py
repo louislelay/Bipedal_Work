@@ -79,9 +79,9 @@ class DCController(Node):
 		if (self.enc_A1_last == GPIO.LOW) and Lstate == GPIO.HIGH:
 			val = GPIO.input(self.ENC_A2)
 			if val == GPIO.LOW and self.direction:
-				self.irection = False  # Reverse
+				self.direction = False  # Reverse
 			elif val == GPIO.HIGH and not Direction:
-				self.irection = True  # Forward
+				self.direction = True  # Forward
 
 		self.enc_A1_last = Lstate
 
@@ -97,7 +97,7 @@ class DCController(Node):
 		dt = current_time - self.last_time
 		
 		error = self.setpoint - self.abs_duration
-		self.integral += error * self.dt
+		self.integral += error * dt
 		derivative = (error - self.prev_error) / dt if dt > 0 else 0
 		
 		self.output = self.kp * error + self.ki * self.integral + self.kd * derivative
