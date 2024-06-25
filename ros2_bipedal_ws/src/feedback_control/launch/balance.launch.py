@@ -16,7 +16,7 @@ def generate_launch_description():
 		Node(
             package='dc_controller',
             executable='dc_controller_node',
-            name='sdc_controller_node'
+            name='dc_controller_node'
         ),
         Node(
             package='feedback_control',
