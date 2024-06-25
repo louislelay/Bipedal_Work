@@ -66,22 +66,3 @@ def main(args=None):
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-
-
-
-mpu.configure() # Apply the settings to the registers.
-
-while True:
-
-	print("|.....MPU9250 in 0x68 Address.....|")
-	print("Accelerometer", mpu.readAccelerometerMaster())
-	print("Gyroscope", mpu.readGyroscopeMaster())
-	print("Magnetometer", mpu.readMagnetometerMaster())
-	print("Temperature", mpu.readTemperatureMaster())
-	print("\n")
-
-	time.sleep(1)
