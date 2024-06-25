@@ -18,7 +18,7 @@ class ServoController(Node):
 
 		# GPIO setup
 
-		self.servo_pins = [17, 18, 27, 22]  # Change this to your GPIO pins
+		self.servo_pins = [18, 23, 24, 25]  # Change this to your GPIO pins
 
 		GPIO.setmode(GPIO.BCM)
 
