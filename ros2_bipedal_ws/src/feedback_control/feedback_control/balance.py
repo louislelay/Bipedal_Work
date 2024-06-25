@@ -32,7 +32,7 @@ class Balance(Node):
 		self.prev_input = 0.
 
 		# Publish the control signal as the desired angle for the servos
-		servo_signal = '90:90:90:90'		# 40:40:0:10
+		servo_signal = '40:40:0:10'
 		command_msg = String()
 		command_msg.data = servo_signal
 		self.angle_publisher.publish(command_msg)
@@ -47,7 +47,7 @@ class Balance(Node):
 
 
 		vit_mot = int(self.PID(roll))
-		#print("vit_mot : "+ str(vit_mot))
+		print("vit_mot : "+ str(vit_mot))
 
 		t_real = time.time()
 		time.sleep(t_next-t_real)
