@@ -19,7 +19,7 @@ class Balance(Node):
 		self.angle_publisher = self.create_publisher(
 			String,
 			'servo_command',
-			5)
+			10)
 
 		# Publisher for speed of DC
 		self.dc_publisher = self.create_publisher(
@@ -39,19 +39,11 @@ class Balance(Node):
 		
 	def imu_callback(self, msg):
 
-		t = time.time()
-		t_next = t+10
-
 		# Get the roll angle from IMU data
 		roll = int(float(msg.data))
 
-
 		vit_mot = int(self.PID(roll))
 		# print("vit_mot : "+ str(vit_mot))
-
-		t_real = time.time()
-		time.sleep(t_next-t_real)
-
 		
 		dc_signal = str(vit_mot)
 		command_msg = String()
@@ -70,6 +62,8 @@ class Balance(Node):
 		self.prev_input = input
 		
 		PID = int(P+self.I+D)
+
+		PID = input*30
 
 		if (PID>100): PID = 100
 		elif (PID<-100): PID = -100
