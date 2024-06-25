@@ -54,13 +54,16 @@ try:
     while True:
         set_motor_a(75, "forward")
         set_motor_b(75, "forward")
+        print("forward")
         time.sleep(5)
 
         set_motor_a(75, "backward")
         set_motor_b(75, "backward")
+        print("backward")
         time.sleep(5)
 
         stop_motors()
+        print("stop")
         time.sleep(2)
 
 except KeyboardInterrupt:
