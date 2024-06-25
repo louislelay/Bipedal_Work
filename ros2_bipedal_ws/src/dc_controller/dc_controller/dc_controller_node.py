@@ -118,7 +118,7 @@ class DCController(Node):
 
 	def stop(self):
 		self.pwm.ChangeDutyCycle(0)
-		GPIO.output(self.IN_1, GPIO.LO>)
+		GPIO.output(self.IN_1, GPIO.LOW)
 		GPIO.output(self.IN_2, GPIO.LOW)
 	
 	def destroy(self):
