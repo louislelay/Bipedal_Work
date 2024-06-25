@@ -38,7 +38,7 @@ class MPU9250Publisher(Node):
 		self.gyro_data = self.mpu.readGyroscopeMaster()
 		self.mag_data = self.mpu.readMagnetometerMaster()
 
-		filtered_pitch()
+		self.filtered_pitch()
 
 		msg = String()
 
