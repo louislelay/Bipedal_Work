@@ -15,7 +15,7 @@ class MPU9250Publisher(Node):
 		timer_period = 1.0  # seconds
 		self.timer = self.create_timer(timer_period, self.timer_callback)
 		
-		mpu = MPU9250(
+		self.mpu = MPU9250(
 			address_ak=AK8963_ADDRESS, 
 			address_mpu_master=MPU9050_ADDRESS_68, # In 0x68 Address
 			address_mpu_slave=None, 
