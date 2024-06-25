@@ -63,12 +63,12 @@ class Balance(Node):
 		Kd = 0
 
 		P = Kp * float(input)
-		I += Ki * float(input)
+		self.I += Ki * float(input)
 		D = Kd * (input - self.prev_input)
 		
 		self.prev_input = input
 		
-		PID = int(P+I+D)
+		PID = int(P+self.I+D)
 
 		if (PID>100): PID = 100
 		if (PID<-100): PID = -100
