@@ -51,9 +51,9 @@ class Balance(Node):
 		self.dc_publisher.publish(command_msg)
 
 	def PID(self, input):
-		Kp = 250.
-		Ki = 0.
-		Kd = 0
+		Kp = 10
+		Ki = 0
+		Kd = 5
 
 		P = Kp * float(input)
 		self.I += Ki * float(input)
@@ -62,8 +62,6 @@ class Balance(Node):
 		self.prev_input = input
 		
 		PID = int(P+self.I+D)
-
-		PID = input*30
 
 		if (PID>100): PID = 100
 		elif (PID<-100): PID = -100
