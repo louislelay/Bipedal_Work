@@ -40,7 +40,7 @@ class MPU9250Publisher(Node):
 		self.gyro_data = self.mpu.readGyroscopeMaster()
 		self.mag_data = self.mpu.readMagnetometerMaster()
 
-		self.filtered_roll()
+		self.filtered_pitch_roll()
 
 		msg = String()
 
@@ -50,13 +50,13 @@ class MPU9250Publisher(Node):
 
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
-	def filtered_pitch(self):
+	def filtered_pitch_roll(self):
 		GyrYd = self.gyro_data[1] / 131
 		GyrYd = float(GyrYd) / 100
 		pitchGyr = float(self.pitch - GyrYd)
 		pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
 
-			# Calculate roll (rotation around the x-axis)
+		# Calculate roll (rotation around the x-axis)
 		self.roll = np.arctan2(ay, az)
 		self.roll = np.degrees(self.roll)
 
