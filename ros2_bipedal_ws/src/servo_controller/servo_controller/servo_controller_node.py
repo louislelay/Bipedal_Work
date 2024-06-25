@@ -37,6 +37,8 @@ class ServoController(Node):
 		self.pwm4 = GPIO.PWM(self.servo_pins[3], 50)  # 50Hz frequency
 		self.pwm4.start(0)
 
+		self.prev_angles = [0, 0, 0, 0]
+
 	def command_callback(self, msg):
 
 		command = msg.data
@@ -56,16 +58,20 @@ class ServoController(Node):
 			angle_s3 = int(parts[2])
 			angle_s4 = 180-int(parts[3])
 
+			angles = [angle_s1, angle_s2, angle_s3, angle_s4]
+			pwms = [self.pwm1, self.pwm2, self.pwm3, self.pwm4]
+
 			for e in parts:
 				angle = int(e)
 				if angle > 180 or angle < 0:
 					self.get_logger().info('The angle you specified is not between 0 and 180 degrees')
 					return
 			
-			self.set_servo_angle(angle_s1, self.pwm1)
-			self.set_servo_angle(angle_s2, self.pwm2)
-			self.set_servo_angle(angle_s3, self.pwm3)
-			self.set_servo_angle(angle_s4, self.pwm4)
+			for i in range(4):
+				if angles(i) != self.prev_angles(i):
+					self.set_servo_angle(angles(i), pwms(i))
+			
+			self.prev_angles = angles
 
 
 		except (IndexError, ValueError) as e:
