@@ -24,9 +24,9 @@ class DCController(Node):
 		self.IN_1 = 26         # GPIO pin for L298N direction of Motor A
 		self.IN_2 = 6          # GPIO pin for L298N direction of Motor A
 
-		self.EN_B = 22         # GPIO pin for L298N enable of Motor A
-		self.IN_3 = 26         # GPIO pin for L298N direction of Motor A
-		self.IN_4 = 6          # GPIO pin for L298N direction of Motor A
+		self.EN_B = 5         # GPIO pin for L298N enable of Motor A
+		self.IN_3 = 12         # GPIO pin for L298N direction of Motor A
+		self.IN_4 = 16          # GPIO pin for L298N direction of Motor A
 
 		# Variables for encoder
 		self.enc_A1_last = GPIO.LOW
