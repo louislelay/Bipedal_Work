@@ -13,19 +13,19 @@ class Balance(Node):
 			String,
 			'mpu9250_data',
 			self.imu_callback,
-			10)
+			30)
 		
 		# Publisher for servo angles
 		self.angle_publisher = self.create_publisher(
 			String,
 			'servo_command',
-			10)
+			5)
 
 		# Publisher for speed of DC
 		self.dc_publisher = self.create_publisher(
 			String,
 			'dc_command',
-			10)
+			30)
 		
 		# PID controller parameters
 		self.I = 0.
@@ -59,7 +59,6 @@ class Balance(Node):
 		self.dc_publisher.publish(command_msg)
 
 	def PID(self, input):
-		input = input / 180 * 3.14
 		Kp = 250.
 		Ki = 0.
 		Kd = 0
