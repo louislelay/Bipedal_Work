@@ -52,8 +52,8 @@ def stop_motors():
 
 try:
     while True:
-        set_motor_a(75, "forward")
-        set_motor_b(75, "forward")
+        set_motor_a(100, "forward")
+        set_motor_b(100, "forward")
         print("forward")
         time.sleep(5)
 
