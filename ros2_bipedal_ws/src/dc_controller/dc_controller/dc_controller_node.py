@@ -65,11 +65,16 @@ class DCController(Node):
 
 		self.get_logger().info(f'Received command: {command}')
 
-		self.setpoint = int(command)
+		self.setpoint = abs(int(command))
+
+
 
 		self.abs_duration = abs(self.duration)
 		self.compute_pid()  # Compute the PID output
-		self.advance()  # Drive motor forward
+		
+		if int(command) > 0 : self.advance()
+		else : self.back()
+
 		print(f"Pulse: {self.duration}")
 		self.duration = 0  # Reset duration for next count
 		#time.sleep(0.1)  # Sleep for 100ms
