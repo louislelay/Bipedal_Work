@@ -68,8 +68,8 @@ class ServoController(Node):
 					return
 			
 			for i in range(4):
-				#if angles[i] != self.prev_angles[i]:
-				self.set_servo_angle(angles[i], pwms[i])
+				if angles[i] != self.prev_angles[i]:
+					self.set_servo_angle(angles[i], pwms[i])
 			
 			self.prev_angles = angles
 
