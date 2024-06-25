@@ -31,9 +31,9 @@ class Balance(Node):
 		self.prev_input = 0.
 
 		# Publish the control signal as the desired angle for the servos
-		signal = '90:90:90:90'		# 40:40:0:10
+		servo_signal = '90:90:90:90'		# 40:40:0:10
 		command_msg = String()
-		command_msg.data = control_signal
+		command_msg.data = servo_signal
 		self.angle_publisher.publish(command_msg)
 		
 	def imu_callback(self, msg):
@@ -51,9 +51,9 @@ class Balance(Node):
 		time.sleep(t_next-t_real)
 
 		
-		signal = str(vit_mot)
+		dc_signal = str(vit_mot)
 		command_msg = String()
-		command_msg.data = control_signal
+		command_msg.data = dc_signal
 		self.dc_publisher.publish(command_msg)
 
 	def PID(self, input):
