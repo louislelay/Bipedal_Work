@@ -42,9 +42,9 @@ class Balance(Node):
 		t_next = t+10
 
 		# Get the roll angle from IMU data
-		pitch = msg.data
+		roll = msg.data
 
-		vit_mot = int(self.PID(pitch))
+		vit_mot = int(self.PID(roll))
 
 		t_real = time.time()
 		time.sleep(t_next-t_real)

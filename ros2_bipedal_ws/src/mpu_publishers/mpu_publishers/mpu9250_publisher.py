@@ -44,23 +44,23 @@ class MPU9250Publisher(Node):
 
 		msg = String()
 
-		msg.data = str(self.pitch) + " and " + str(self.roll)
+		msg.data = str(self.roll)
 
 		self.publisher_.publish(msg)
 
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
 	def filtered_pitch_roll(self):
-		GyrYd = self.gyro_data[1] / 131
-		GyrYd = float(GyrYd) / 100
-		pitchGyr = float(self.pitch - GyrYd)
-		pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
+		#GyrYd = self.gyro_data[1] / 131
+		#GyrYd = float(GyrYd) / 100
+		#pitchGyr = float(self.pitch - GyrYd)
+		#pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
 
 		# Calculate roll (rotation around the x-axis)
 		self.roll = np.arctan2(self.accel_data[1], self.accel_data[2])
 		self.roll = np.degrees(self.roll)
 
-		self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
+		#self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
 
 
 def main(args=None):
