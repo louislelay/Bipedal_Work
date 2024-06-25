@@ -47,7 +47,7 @@ class Balance(Node):
 
 
 		vit_mot = int(self.PID(roll))
-		print("vit_mot : "+ str(vit_mot))
+		# print("vit_mot : "+ str(vit_mot))
 
 		t_real = time.time()
 		time.sleep(t_next-t_real)
@@ -59,6 +59,7 @@ class Balance(Node):
 		self.dc_publisher.publish(command_msg)
 
 	def PID(self, input):
+		input = input / 180 * 3.14
 		Kp = 250.
 		Ki = 0.
 		Kd = 0
@@ -72,7 +73,7 @@ class Balance(Node):
 		PID = int(P+self.I+D)
 
 		if (PID>100): PID = 100
-		if (PID<-100): PID = -100
+		elif (PID<-100): PID = -100
 
 		return PID
 
