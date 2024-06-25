@@ -15,25 +15,19 @@ class MPU9250Publisher(Node):
 		timer_period = 1.0  # seconds
 		self.timer = self.create_timer(timer_period, self.timer_callback)
 		
-		self.mpu = MPU9250(
-			address_ak=AK8963_ADDRESS,
-			address_mpu_master=MPU9050_ADDRESS_68,
-			address_mpu_slave=None,
+		mpu = MPU9250(
+			address_ak=AK8963_ADDRESS, 
+			address_mpu_master=MPU9050_ADDRESS_68, # In 0x68 Address
+			address_mpu_slave=None, 
 			bus=1,
-			gfs=GFS_1000,   # 1000 degrees per second
-			afs=AFS_8G,    # 8G
-			mfs=AK8963_BIT_16,  # 16-bit resolution
+			gfs=GFS_1000, 
+			afs=AFS_8G, 
+			mfs=AK8963_BIT_16, 
 			mode=AK8963_MODE_C100HZ)
 
 		self.mpu.configure()  # Apply the settings to the registers.
 
-		self.num_samples=1000
-
-		# (they're commented bc it was too long to run every times)
-		#self.callibrate_gyro()
-		#self.callibrate_accel()
-
-		self.angle = [0, 0, 0]
+		self.pitch = 0
 
 		self.last_time = time.time()
 
@@ -44,76 +38,24 @@ class MPU9250Publisher(Node):
 		self.gyro_data = self.mpu.readGyroscopeMaster()
 		self.mag_data = self.mpu.readMagnetometerMaster()
 
-		# Apply the calibration offsets (they're commented bc it was too long to run every times)
-		self.gyro_data[0] -= -1.774 	# self.gx_offset
-		self.gyro_data[1] -= 0.543 		# self.gy_offset
-		self.gyro_data[2] -= 0.188 		# self.gz_offset
-
-		self.accel_data[0] -= -1.973 	# self.ax_offset
-		self.accel_data[1] -= -1.994 	# self.ay_offset
-		self.accel_data[2] -= -1.977 	# self.az_offset
-
-		self.calculate_angle()
+		filtered_pitch()
 
 		msg = String()
 
-		msg.data = str(self.angle[0]) + ":" + str(self.angle[1]) + ":" + str(self.angle[2])
+		msg.data = str(self.pitch)
 
 		self.publisher_.publish(msg)
 
 		self.get_logger().info('Publishing: \n"%s"' % msg.data)
 
-		
-	
-	def callibrate_gyro(self):
-		print("Calibrating gyroscope...")
-		print("Please keep the sensor stationary during calibration.")
-		
-		gyro_data = []
-		for _ in range(self.num_samples):
-			gyro_data.append(self.mpu.readGyroscopeMaster())
-			time.sleep(0.01)
-		
-		gyro_data = np.array(gyro_data)
-		self.gx_offset, self.gy_offset, self.gz_offset = np.mean(gyro_data, axis=0)
-		
-		print("Calibration complete.")
-		print("Gyroscope offsets: gx_offset={}, gy_offset={}, gz_offset={}".format(self.gx_offset, self.gy_offset, self.gz_offset))
+	def filtered_pitch(self):
+		GyrYd = self.gyro_data[1] / 131
+		GyrYd = float(GyrYd) / 100
+		pitchGyr = float(self.pitch - GyrYd)
+		pitchAcc = float(180/3.141592)*atan2(self.accel_data[0], self.accel_data[2])
 
-	
-	def callibrate_accel(self):
-		print("Calibrating accelerometer...")
-		print("Please follow the instructions for each axis.")
-		
-		self.accel_offsets = [0, 0, 0]
-		axis_labels = ['x', 'y', 'z']
-		
-		for axis in range(3):
-			print("Orient the sensor so that the {} axis is pointed against gravity.".format(axis_labels[axis]))
-			input("Press Enter when ready...")
-			
-			accel_data = []
-			for _ in range(self.num_samples):
-				accel_data.append(self.mpu.readAccelerometerMaster()[axis])
-				time.sleep(0.01)
-			
-			accel_offset = np.mean(accel_data)
-			self.accel_offsets[axis] = accel_offset - 1
-			
-			print("{} axis offset: {}".format(axis_labels[axis], self.accel_offsets[axis]))
-		
-			print("Calibration complete.")
-			print("Accelerometer offsets: ax_offset={}, ay_offset={}, az_offset={}".format(*self.accel_offsets))
-	
-	def calculate_angle(self):
-		current_time = time.time()
-		dt = current_time - self.last_time
-		self.last_time = current_time
-		# Using Complementary Filter
-		A = 0.98
-		
-		for i in range(3):
-			self.angle[i] = A * (self.angle[i]+self.gyro_data[i]*dt) + (1-A) * self.accel_data[i]
+		self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
+
 
 def main(args=None):
 	rclpy.init(args=args)
@@ -124,3 +66,22 @@ def main(args=None):
 
 if __name__ == '__main__':
 	main()
+
+
+
+
+
+
+
+mpu.configure() # Apply the settings to the registers.
+
+while True:
+
+	print("|.....MPU9250 in 0x68 Address.....|")
+	print("Accelerometer", mpu.readAccelerometerMaster())
+	print("Gyroscope", mpu.readGyroscopeMaster())
+	print("Magnetometer", mpu.readMagnetometerMaster())
+	print("Temperature", mpu.readTemperatureMaster())
+	print("\n")
+
+	time.sleep(1)
