@@ -47,7 +47,7 @@ class Balance(Node):
 
 
 		vit_mot = int(self.PID(roll))
-		print("vit_mot : "+ vit_mot)
+		#print("vit_mot : "+ str(vit_mot))
 
 		t_real = time.time()
 		time.sleep(t_next-t_real)
