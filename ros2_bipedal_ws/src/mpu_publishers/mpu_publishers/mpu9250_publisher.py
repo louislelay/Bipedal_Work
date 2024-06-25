@@ -7,6 +7,7 @@ from mpu9250_jmdev.mpu_9250 import MPU9250
 
 import numpy as np
 import time
+import math
 
 class MPU9250Publisher(Node):
 	def __init__(self):
@@ -52,7 +53,7 @@ class MPU9250Publisher(Node):
 		GyrYd = self.gyro_data[1] / 131
 		GyrYd = float(GyrYd) / 100
 		pitchGyr = float(self.pitch - GyrYd)
-		pitchAcc = float(180/3.141592)*atan2(self.accel_data[0], self.accel_data[2])
+		pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
 
 		self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
 
