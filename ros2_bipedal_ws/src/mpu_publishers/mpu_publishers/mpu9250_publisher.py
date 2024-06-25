@@ -57,7 +57,7 @@ class MPU9250Publisher(Node):
 		pitchAcc = float(180/3.141592)*math.atan2(self.accel_data[0], self.accel_data[2])
 
 		# Calculate roll (rotation around the x-axis)
-		self.roll = np.arctan2(ay, az)
+		self.roll = np.arctan2(self.accel_data[1], self.accel_data[2])
 		self.roll = np.degrees(self.roll)
 
 		self.pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
