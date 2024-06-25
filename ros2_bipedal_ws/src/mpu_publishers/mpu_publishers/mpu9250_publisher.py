@@ -44,7 +44,7 @@ class MPU9250Publisher(Node):
 
 		msg = String()
 
-		msg.data = str(self.pitch + self.roll)
+		msg.data = str(self.pitch) + " and " + str(self.roll)
 
 		self.publisher_.publish(msg)
 
