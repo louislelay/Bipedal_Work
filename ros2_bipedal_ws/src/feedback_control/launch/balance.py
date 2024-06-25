@@ -13,9 +13,14 @@ def generate_launch_description():
             executable='servo_controller_node',
             name='servo_controller_node'
         ),
+		Node(
+            package='dc_controller',
+            executable='dc_controller_node',
+            name='sdc_controller_node'
+        ),
         Node(
             package='feedback_control',
-            executable='two_servo_controller',
-            name='two_servo_controller'
+            executable='balance',
+            name='balance'
         ),
     ])
