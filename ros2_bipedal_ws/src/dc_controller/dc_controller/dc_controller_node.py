@@ -36,7 +36,7 @@ class DCController(Node):
 		self.kd = 0
 
 		# PID variables
-		self.setpoint = 80	# Speed wanted
+		self.setpoint = 0	# Speed wanted
 		self.output = 0
 		self.prev_error = 0
 		self.integral = 0
@@ -107,15 +107,19 @@ class DCController(Node):
 		self.last_time = current_time
 
 	def advance(self):
-		GPIO.output(self.EN_A, GPIO.LOW)
 		self.pwm.ChangeDutyCycle(self.output)
+		GPIO.output(self.IN_1, GPIO.HIGH)
+		GPIO.output(self.IN_2, GPIO.LOW)
 
 	def back(self):
-		GPIO.output(self.EN_A, GPIO.HIGH)
 		self.pwm.ChangeDutyCycle(self.output)
+		GPIO.output(self.IN_1, GPIO.LOW)
+		GPIO.output(self.IN_2, GPIO.HIGH)
 
 	def stop(self):
 		self.pwm.ChangeDutyCycle(0)
+		GPIO.output(self.IN_1, GPIO.LO>)
+		GPIO.output(self.IN_2, GPIO.LOW)
 	
 	def destroy(self):
 		self.pwm.stop()
