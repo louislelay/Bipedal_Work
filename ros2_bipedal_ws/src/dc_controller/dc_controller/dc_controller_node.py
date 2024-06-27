@@ -35,9 +35,9 @@ class DCController(Node):
 		self.last_time_enc = time.time()
 
 		# PID constants
-		self.kp = 0.6
-		self.ki = 5
-		self.kd = 0
+		self.kp = 5
+		self.ki = 0.2
+		self.kd = 1
 
 		# PID variables
 		self.setpoint = 0	# Speed wanted
