@@ -82,7 +82,7 @@ def set_servo_angle(pwm, angle):
 
 def PID(input, I, prev_input):
 	Kp = 10
-	Ki = 0
+	Ki = 0.5
 	Kd = 2
 
 	P = Kp * float(input)
@@ -128,7 +128,7 @@ try:
 
 		vit_mot, I, prev_input = PID(abs(roll), I, prev_input)
 
-		angless = [40, 180-40, 0, 180-10]
+		angless = [40, 180-40, 0, 180-15]
 
 		# Set servo positions based on angles
 		for i in range(4):
