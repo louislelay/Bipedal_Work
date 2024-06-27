@@ -75,8 +75,8 @@ class DCController(Node):
 
 	def _encoder_thread(self):
 		while not self.stop_thread:
-			state_a = GPIO.input(self.pin_a)
-			state_b = GPIO.input(self.pin_b)
+			state_a = GPIO.input(self.ENC_A1)
+			state_b = GPIO.input(self.ENC_A2)
 
 			if state_a == state_b:
 				self.counter += 1
