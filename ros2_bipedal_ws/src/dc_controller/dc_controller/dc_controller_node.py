@@ -29,11 +29,10 @@ class DCController(Node):
 		self.ENC_A2 = 17  # GPIO pin for encoder 2 of Motor A
 
 		# Variables for encoder
-		self.counts_per_rev = 860*2
+		self.counts_per_rev = 8
 		self.counter = 0
 		self.rpm = 0
 		self.last_time_enc = time.time()
-		self.Direction = True
 
 		# PID constants
 		self.kp = 0.6
@@ -71,48 +70,32 @@ class DCController(Node):
 		self.pwmB.start(0)
 
 		# Initialize encoder
-		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=self.calculate_rpm)
+		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=self.encoder_callback)
 		
 
-	#def encoder_callback(self, channel):
-		#state_a1 = GPIO.input(self.ENC_A1)
-		#state_a2 = GPIO.input(self.ENC_A2)
+	def encoder_callback(self, channel):
+		state_a1 = GPIO.input(self.ENC_A1)
+		state_a2 = GPIO.input(self.ENC_A2)
 
-		#if state_a1 != self.last_state_a1:  # A has changed
-			#if state_a1 == state_a2:
-			#	self.counter += 1
-			#else:
-			#	self.counter -= 1
+		if state_a1 != self.last_state_a1:  # A has changed
+			if state_a1 == state_a2:
+				self.counter += 1
+			else:
+				self.counter -= 1
 
-		#self.last_state_a1 = state_a1
+		self.last_state_a1 = state_a1
 		
 		#print(f"Counter: {self.counter}")
 
-	def calculate_rpm(self, channel):
-		#current_time = time.time()
-		#elapsed_time = current_time - self.last_time_enc
-		#self.last_time_enc = current_time
+	def calculate_rpm(self):
+		current_time = time.time()
+		elapsed_time = current_time - self.last_time_enc
+		self.last_time_enc = current_time
 
 		# Calculate RPM
-		#revolutions = self.counter / self.counts_per_rev
-		#self.counter = 0  # Reset counter after calculating RPM
-		#self.rpm = (revolutions / elapsed_time) * 60
-
-		state_a1 = GPIO.input(self.ENC_A1)
-
-		if (self.last_state_a1 == 0) and (state_a1 == 1):
-			state_a2 = GPIO.input(self.ENC_A2)
-			if (state_a2 == 0 and self.Direction):
-				self.Direction = False  # Reverse
-			elif (state_a2 == 1 and not self.Direction):
-				self.Direction = True  # Forward
-
-		self.last_state_a1 = state_a1
-
-		if not self.Direction:
-			self.rpm += 1
-		else:
-			self.rpm -= 1
+		revolutions = self.counter / self.counts_per_rev
+		self.counter = 0  # Reset counter after calculating RPM
+		self.rpm = (revolutions / elapsed_time) * 60
 
 	def command_callback(self, msg):
 
@@ -122,6 +105,7 @@ class DCController(Node):
 
 		self.setpoint = abs(int(command))
 
+		self.calculate_rpm()
 		print(f"Motor RPM: {self.rpm}")
 
 		self.compute_pid()  # Compute the PID output
