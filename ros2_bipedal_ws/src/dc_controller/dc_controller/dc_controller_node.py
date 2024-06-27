@@ -122,7 +122,6 @@ class DCController(Node):
 
 		self.setpoint = abs(int(command))
 
-		self.calculate_rpm()
 		print(f"Motor RPM: {self.rpm}")
 
 		self.compute_pid()  # Compute the PID output
