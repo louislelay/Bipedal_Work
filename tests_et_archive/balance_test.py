@@ -94,7 +94,7 @@ def PID(input, I, prev_input):
 	PID = int(P+I+D)
 
 	if (PID>100): PID = 100
-	elif (PID<-100): PID = -100
+	elif (PID<0): PID = 0
 
 	return PID, I, prev_input
 
