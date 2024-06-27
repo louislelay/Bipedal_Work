@@ -4,6 +4,9 @@ from rclpy.node import Node
 
 from action_bipedal_interface.action import DcController
 
+import RPi.GPIO as GPIO
+import time
+
 
 class DCControllerActionServer(Node):
 
