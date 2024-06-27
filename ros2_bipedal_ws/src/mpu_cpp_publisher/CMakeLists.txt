@@ -7,17 +7,17 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
-
-<depend>rclcpp</depend>
-<depend>std_msgs</depend>
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
 add_executable(mpu9250_cpp_publisher src/mpu9250_cpp_publisher.cpp)
+
+ament_target_dependencies(rclcpp std_msgs)
+
 target_include_directories(mpu9250_cpp_publisher PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
+
 target_compile_features(mpu9250_cpp_publisher PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 install(TARGETS mpu9250_cpp_publisher
