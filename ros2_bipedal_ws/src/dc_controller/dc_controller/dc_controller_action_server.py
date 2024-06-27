@@ -167,7 +167,7 @@ class DCControllerActionServer(Node):
 		self.get_logger().info('Cancelling goal')
 		return CancelResponse.ACCEPT
 
-	async def execute_callback(self, goal_handle):
+	def execute_callback(self, goal_handle):
 		# PID variables
 		self.integral = 0
 
@@ -195,7 +195,7 @@ class DCControllerActionServer(Node):
 				self.back()
 
 			feedback_msg.current_rpm = int(self.rpm)
-			#self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
+			self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
 			goal_handle.publish_feedback(feedback_msg)
 
 		result = DcController.Result()
