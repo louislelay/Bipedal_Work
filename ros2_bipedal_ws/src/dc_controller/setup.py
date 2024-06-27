@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'dc_controller_node = dc_controller.dc_controller_node:main'
+			'fibonacci_action_server = action_tutorials_py.fibonacci_action_server:main'
         ],
     },
 )
