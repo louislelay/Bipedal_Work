@@ -158,7 +158,7 @@ class DCControllerActionServer(Node):
 		self.get_logger().info('Executing goal...')
 
 		feedback_msg = DcController.Feedback()
-		feedback_msg.output = self.output
+		feedback_msg.current_rpm = self.rpm
 
 		command = goal_handle.request.setpoint
 		self.setpoint = abs(command)
@@ -173,12 +173,13 @@ class DCControllerActionServer(Node):
 			if int(command) > 0 : self.advance()
 			else : self.back()
 
-			feedback_msg.rpm = self.rpm
+			feedback_msg.current_rpm = self.rpm
 			self.get_logger().info('Feedback: {0}'.format(feedback_msg.rpm))
+
 			goal_handle.publish_feedback(feedback_msg)
 
 		result = DcController.Result()
-		result.rpm = feedback_msg.output
+		result.current_rpm = feedback_msg.output
 		return result
 
 
@@ -187,7 +188,13 @@ def main(args=None):
 
 	dc_controller_action_server = DCControllerActionServer()
 
-	rclpy.spin(dc_controller_action_server)
+	try:
+		rclpy.spin(dc_controller_action_server)
+	except KeyboardInterrupt:
+		pass
+	finally:
+		dc_controller_action_server.destroy()
+		rclpy.shutdown()
 
 if __name__ == '__main__':
 	main()

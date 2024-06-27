@@ -1,5 +1,5 @@
 int32 setpoint
 ---
-int32 rpm
+int32 current_rpm
 ---
 int32 output
