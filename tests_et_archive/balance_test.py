@@ -105,9 +105,10 @@ try:
 		# Balancing logic
 		angle_x = np.arctan2(Ay, Az)
 		angle_x = np.degrees(angle_x)
+		print(angle_x)
 
 		angless = [40, 180-40, 0, 180-10]
-		
+
 		# Set servo positions based on angles
 		for i in range(4):
 			set_servo_angle(servo_pwm[i], angless[i])
