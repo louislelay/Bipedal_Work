@@ -5,10 +5,13 @@ import RPi.GPIO as GPIO
 from mpu9250_jmdev.registers import *
 from mpu9250_jmdev.mpu_9250 import MPU9250
 
+# Corrected I2C Address
+MPU9250_ADDRESS = 0x77
+
 # MPU-9250 Registers and their addresses
 mpu = MPU9250(
     address_ak=AK8963_ADDRESS, 
-    address_mpu_master=MPU9050_ADDRESS_77, # In 0x68 Address
+    address_mpu_master=MPU9250_ADDRESS, 
     address_mpu_slave=None, 
     bus=1,
     gfs=GFS_1000, 
@@ -16,7 +19,6 @@ mpu = MPU9250(
     mfs=AK8963_BIT_16, 
     mode=AK8963_MODE_C100HZ
 )
-
 # Initialize MPU-9250
 def MPU_Init():
 	mpu.configure()  # Apply the settings to the registers.
