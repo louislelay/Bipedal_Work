@@ -83,7 +83,7 @@ def set_servo_angle(pwm, angle):
 def PID(input, I, prev_input):
 	Kp = 10
 	Ki = 4
-	Kd = 5
+	Kd = 0
 
 	P = Kp * (-2-float(input))
 	I += Ki * (-2-float(input))
