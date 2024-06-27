@@ -80,7 +80,7 @@ def set_servo_angle(pwm, angle):
 	#time.sleep(0.5)
 	#pwm.ChangeDutyCycle(0)
 
-def PID(self, input, I, prev_input):
+def PID(input, I, prev_input):
 	Kp = 10
 	Ki = 0
 	Kd = 2
