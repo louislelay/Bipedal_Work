@@ -1,5 +1,5 @@
 int32 goal
 ---
-int32 result
+int32 final_rpm
 ---
 int32 current_rpm

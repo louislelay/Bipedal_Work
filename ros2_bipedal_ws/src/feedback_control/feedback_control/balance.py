@@ -4,9 +4,9 @@ from std_msgs.msg import String
 import numpy as np
 import time
 
-class Balance(Node):
+class BalanceActionCLient(Node):
 	def __init__(self):
-		super().__init__('balance')
+		super().__init__('balance_action_client')
 		
 		# Subscribe to IMU data
 		self.imu_subscription = self.create_subscription(
@@ -75,11 +75,11 @@ class Balance(Node):
 def main(args=None):
 	rclpy.init(args=args)
 	
-	balance = Balance()
+	balance_action_client = BalanceActionCLient()
 	
-	rclpy.spin(balance)
+	rclpy.spin(balance_action_client)
 	
-	balance.destroy_node()
+	balance_action_client.destroy_node()
 	rclpy.shutdown()
 
 if __name__ == '__main__':
