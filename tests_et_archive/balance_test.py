@@ -126,7 +126,7 @@ try:
 		roll = read_raw_data()
 		print(roll)
 
-		vit_mot, I, prev_input = PID(roll, I, prev_input)
+		vit_mot, I, prev_input = PID(abs(roll), I, prev_input)
 
 		angless = [40, 180-40, 0, 180-1]
 
