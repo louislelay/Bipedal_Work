@@ -36,8 +36,8 @@ class DCController(Node):
 
 		# PID constants
 		self.kp = 1
-		self.ki = 0
-		self.kd = 0.2
+		self.ki = 0.1
+		self.kd = 0.3
 
 		# PID variables
 		self.setpoint = 0	# Speed wanted
