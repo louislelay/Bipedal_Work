@@ -30,11 +30,11 @@ class DCController(Node):
 		self.ENC_A2 = 17  # GPIO pin for encoder 2 of Motor A
 
 		# Variables for encoder
-        self.counts_per_rev = counts_per_rev
-        self.counter = 0
-        self.rpm = 0
-        self.last_time_enc = time.time()
-        self.stop_thread = False
+		self.counts_per_rev = counts_per_rev
+		self.counter = 0
+		self.rpm = 0
+		self.last_time_enc = time.time()
+		self.stop_thread = False
 
 		# PID constants
 		self.kp = 0.6
@@ -58,8 +58,8 @@ class DCController(Node):
 		GPIO.setup(self.IN_3, GPIO.OUT)
 		GPIO.setup(self.IN_4, GPIO.OUT)
 
-        GPIO.setup(self.ENC_A1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.ENC_A2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(self.ENC_A1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(self.ENC_A2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 		# Initialize PWMA
 		self.pwmA = GPIO.PWM(self.EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
@@ -70,30 +70,30 @@ class DCController(Node):
 		self.pwmB.start(0)
 
 		# Initialize encoder
-        self.thread = threading.Thread(target=self._encoder_thread)
-        self.thread.start()
+		self.thread = threading.Thread(target=self._encoder_thread)
+		self.thread.start()
 
-    def _encoder_thread(self):
-        while not self.stop_thread:
-            state_a = GPIO.input(self.pin_a)
-            state_b = GPIO.input(self.pin_b)
+	def _encoder_thread(self):
+		while not self.stop_thread:
+			state_a = GPIO.input(self.pin_a)
+			state_b = GPIO.input(self.pin_b)
 
-            if state_a == state_b:
-                self.counter += 1
-            else:
-                self.counter -= 1
+			if state_a == state_b:
+				self.counter += 1
+			else:
+				self.counter -= 1
 
-            time.sleep(0.001)  # Small delay to prevent high CPU usage
+			time.sleep(0.001)  # Small delay to prevent high CPU usage
 
-    def calculate_rpm(self):
-        current_time = time.time()
-        elapsed_time = current_time - self.last_time_enc
-        self.last_time_enc = current_time
+	def calculate_rpm(self):
+		current_time = time.time()
+		elapsed_time = current_time - self.last_time_enc
+		self.last_time_enc = current_time
 
-        # Calculate RPM
-        revolutions = self.counter / self.counts_per_rev
-        self.counter = 0  # Reset counter after calculating RPM
-        self.rpm = (revolutions / elapsed_time) * 60
+		# Calculate RPM
+		revolutions = self.counter / self.counts_per_rev
+		self.counter = 0  # Reset counter after calculating RPM
+		self.rpm = (revolutions / elapsed_time) * 60
 
 	def command_callback(self, msg):
 
@@ -161,7 +161,7 @@ class DCController(Node):
 	
 	def destroy(self):
 		self.stop_thread = True
-        self.thread.join()
+		self.thread.join()
 		self.pwmA.stop()
 		self.pwmB.stop()
 		GPIO.cleanup()
