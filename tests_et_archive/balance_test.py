@@ -21,109 +21,109 @@ Device_Address = 0x68
 
 # Initialize MPU-9250
 def MPU_Init():
-    # Write to sample rate register
-    bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
-    # Write to power management register
-    bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
-    # Write to Configuration register
-    bus.write_byte_data(Device_Address, CONFIG, 0)
-    # Write to Gyro configuration register
-    bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
-    # Write to interrupt enable register
-    bus.write_byte_data(Device_Address, INT_ENABLE, 1)
+	# Write to sample rate register
+	bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
+	# Write to power management register
+	bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
+	# Write to Configuration register
+	bus.write_byte_data(Device_Address, CONFIG, 0)
+	# Write to Gyro configuration register
+	bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
+	# Write to interrupt enable register
+	bus.write_byte_data(Device_Address, INT_ENABLE, 1)
 
 def read_raw_data(addr):
-    # Accelero and Gyro value are 16-bit
-    high = bus.read_byte_data(Device_Address, addr)
-    low = bus.read_byte_data(Device_Address, addr + 1)
-    value = ((high << 8) | low)
-    # to get signed value from mpu6050
-    if value > 32768:
-        value = value - 65536
-    return value
+	# Accelero and Gyro value are 16-bit
+	high = bus.read_byte_data(Device_Address, addr)
+	low = bus.read_byte_data(Device_Address, addr + 1)
+	value = ((high << 8) | low)
+	# to get signed value from mpu6050
+	if value > 32768:
+		value = value - 65536
+	return value
 
 # Servo Motor Setup
 servo_pins = [25, 18, 24, 23]
 GPIO.setmode(GPIO.BCM)
 for pin in servo_pins:
-    GPIO.setup(pin, GPIO.OUT)
+	GPIO.setup(pin, GPIO.OUT)
 
 servo_pwm = [GPIO.PWM(pin, 50) for pin in servo_pins]
 for pwm in servo_pwm:
-    pwm.start(0)
+	pwm.start(0)
 
 # DC Motor Setup
 motor_pins = {'ENA': 22, 'IN1': 26, 'IN2': 6, 'ENB': 5, 'IN3': 12, 'IN4': 16}
 for pin in motor_pins.values():
-    GPIO.setup(pin, GPIO.OUT)
+	GPIO.setup(pin, GPIO.OUT)
 
 def set_servo_angle(servo_pwm, angle):
-    duty = angle / 18 + 2
-    GPIO.output(servo_pwm, True)
-    servo_pwm.ChangeDutyCycle(duty)
-    time.sleep(0.5)
-    GPIO.output(servo_pwm, False)
-    servo_pwm.ChangeDutyCycle(0)
+	duty = angle / 18 + 2
+	GPIO.output(servo_pwm, True)
+	servo_pwm.ChangeDutyCycle(duty)
+	time.sleep(0.5)
+	GPIO.output(servo_pwm, False)
+	servo_pwm.ChangeDutyCycle(0)
 
 def control_dc_motor(motor_pins, speed, direction):
-    if direction == 'forward':
-        GPIO.output(motor_pins['IN1'], GPIO.HIGH)
-        GPIO.output(motor_pins['IN2'], GPIO.LOW)
-    elif direction == 'backward':
-        GPIO.output(motor_pins['IN1'], GPIO.LOW)
-        GPIO.output(motor_pins['IN2'], GPIO.HIGH)
+	if direction == 'forward':
+		GPIO.output(motor_pins['IN1'], GPIO.HIGH)
+		GPIO.output(motor_pins['IN2'], GPIO.LOW)
+	elif direction == 'backward':
+		GPIO.output(motor_pins['IN1'], GPIO.LOW)
+		GPIO.output(motor_pins['IN2'], GPIO.HIGH)
 
-    pwm = GPIO.PWM(motor_pins['ENA'], 1000)
-    pwm.start(speed)
+	pwm = GPIO.PWM(motor_pins['ENA'], 1000)
+	pwm.start(speed)
 
 # Main loop
 MPU_Init()
 
 try:
-    while True:
-        # Read Accelerometer raw value
-        acc_x = read_raw_data(ACCEL_XOUT_H)
-        acc_y = read_raw_data(ACCEL_YOUT_H)
-        acc_z = read_raw_data(ACCEL_ZOUT_H)
+	while True:
+		# Read Accelerometer raw value
+		acc_x = read_raw_data(ACCEL_XOUT_H)
+		acc_y = read_raw_data(ACCEL_YOUT_H)
+		acc_z = read_raw_data(ACCEL_ZOUT_H)
 
-        # Read Gyroscope raw value
-        gyro_x = read_raw_data(GYRO_XOUT_H)
-        gyro_y = read_raw_data(GYRO_YOUT_H)
-        gyro_z = read_raw_data(GYRO_ZOUT_H)
+		# Read Gyroscope raw value
+		gyro_x = read_raw_data(GYRO_XOUT_H)
+		gyro_y = read_raw_data(GYRO_YOUT_H)
+		gyro_z = read_raw_data(GYRO_ZOUT_H)
 
-        # Full scale range +/- 250 degree/C as per sensitivity scale factor
-        Ax = acc_x/16384.0
-        Ay = acc_y/16384.0
-        Az = acc_z/16384.0
+		# Full scale range +/- 250 degree/C as per sensitivity scale factor
+		Ax = acc_x/16384.0
+		Ay = acc_y/16384.0
+		Az = acc_z/16384.0
 
-        Gx = gyro_x/131.0
-        Gy = gyro_y/131.0
-        Gz = gyro_z/131.0
+		Gx = gyro_x/131.0
+		Gy = gyro_y/131.0
+		Gz = gyro_z/131.0
 
-        # Balancing logic
-        angle_x = math.atan(Ax / math.sqrt(Ay*Ay + Az*Az)) * (180.0 / math.pi)
-        angle_y = math.atan(Ay / math.sqrt(Ax*Ax + Az*Az)) * (180.0 / math.pi)
+		# Balancing logic
+		angle_x = math.atan(Ax / math.sqrt(Ay*Ay + Az*Az)) * (180.0 / math.pi)
+		angle_y = math.atan(Ay / math.sqrt(Ax*Ax + Az*Az)) * (180.0 / math.pi)
 				
-				angless = [40, 40, 0, 10]
-        # Set servo positions based on angles
-        for i in range(4):
-            set_servo_angle(servo_pwm[i], angless[i])
+		angless = [40, 40, 0, 10]
+		# Set servo positions based on angles
+		for i in range(4):
+			set_servo_angle(servo_pwm[i], angless[i])
 
-        # Control DC motors based on tilt
-        if angle_x > 5:
-            control_dc_motor(motor_pins, 50, 'forward')
-        elif angle_x < -5:
-            control_dc_motor(motor_pins, 50, 'backward')
-        else:
-            control_dc_motor(motor_pins, 0, 'stop')
+		# Control DC motors based on tilt
+		if angle_x > 5:
+			control_dc_motor(motor_pins, 50, 'forward')
+		elif angle_x < -5:
+			control_dc_motor(motor_pins, 50, 'backward')
+		else:
+			control_dc_motor(motor_pins, 0, 'stop')
 
-        time.sleep(0.1)
+		time.sleep(0.1)
 
 except KeyboardInterrupt:
-    pass
+	pass
 
 finally:
-    for pwm in servo_pwm:
-        pwm.stop()
-    GPIO.cleanup()
+	for pwm in servo_pwm:
+		pwm.stop()
+	GPIO.cleanup()
 
