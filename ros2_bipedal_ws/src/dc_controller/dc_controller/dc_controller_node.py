@@ -82,6 +82,8 @@ class DCController(Node):
 				self.counter += 1
 			else:
 				self.counter -= 1
+			
+			print(f"Counter: {self.counter}")
 
 			time.sleep(0.001)  # Small delay to prevent high CPU usage
 
@@ -128,6 +130,7 @@ class DCController(Node):
 		
 		self.output = self.kp * error + self.ki * self.integral + self.kd * derivative
 		self.output = max(0, min(100, self.output))  # Clamp self.output to range 0-100
+		print(f"output: {self.output}")
 		
 		self.prev_error = error
 		self.last_time = current_time
