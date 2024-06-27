@@ -113,7 +113,7 @@ try:
 		# Control DC motors based on tilt
 		if roll < -15:
 			control_dc_motor(motor_pins, 100, 'forward')
-		elif roll > -25:
+		elif roll > -20:
 			control_dc_motor(motor_pins, 100, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
