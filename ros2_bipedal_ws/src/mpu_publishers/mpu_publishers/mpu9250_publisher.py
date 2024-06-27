@@ -12,7 +12,7 @@ import math
 class MPU9250Publisher(Node):
 	def __init__(self):
 		super().__init__('mpu9250_publisher')
-		self.publisher_ = self.create_publisher(String, 'mpu9250_data', 50)
+		self.publisher_ = self.create_publisher(String, 'mpu9250_data', 400)
 		timer_period = 1.0  # seconds
 		self.timer = self.create_timer(timer_period, self.timer_callback)
 		

@@ -113,6 +113,8 @@ class DCController(Node):
 		current_time = time.time()
 
 		dt = current_time - self.last_time
+
+		self.encoder_callback()
 		
 		error = self.setpoint - self.abs_duration
 		self.integral += error * dt
