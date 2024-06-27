@@ -104,7 +104,7 @@ try:
 		roll = read_raw_data()
 		print(roll)
 
-		angless = [40, 180-40, 0, 180-(10+0)]
+		angless = [40, 180-40, 0, 180-(8+0)]
 
 		# Set servo positions based on angles
 		for i in range(4):
