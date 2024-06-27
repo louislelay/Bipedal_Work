@@ -11,7 +11,7 @@ class DCControllerActionServer(Node):
 		super().__init__('dc_controller_action_server')
 		self._action_server = ActionServer(
 			self,
-			DCController,
+			DcController,
 			'dc_controller',
 			self.execute_callback)
 		
@@ -154,7 +154,7 @@ class DCControllerActionServer(Node):
 
 		self.get_logger().info('Executing goal...')
 
-		feedback_msg = DCController.Feedback()
+		feedback_msg = DcController.Feedback()
 		feedback_msg.output = self.output
 
 		command = goal_handle.request.setpoint
@@ -174,7 +174,7 @@ class DCControllerActionServer(Node):
 			self.get_logger().info('Feedback: {0}'.format(feedback_msg.rpm))
 			goal_handle.publish_feedback(feedback_msg)
 
-		result = DCController.Result()
+		result = DcController.Result()
 		result.rpm = feedback_msg.output
 		return result
 
