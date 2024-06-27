@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'balance = feedback_control.balance:main',
+			'client = ' + package_name + '.client:main',
         ],
     },
 )
