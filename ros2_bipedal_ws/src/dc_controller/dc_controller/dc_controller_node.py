@@ -3,7 +3,6 @@ from rclpy.node import Node
 from std_msgs.msg import String
 import RPi.GPIO as GPIO
 import time
-import threading
 
 class DCController(Node):
 
@@ -34,7 +33,6 @@ class DCController(Node):
 		self.counter = 0
 		self.rpm = 0
 		self.last_time_enc = time.time()
-		self.stop_thread = False
 
 		# PID constants
 		self.kp = 0.6
@@ -61,6 +59,8 @@ class DCController(Node):
 		GPIO.setup(self.ENC_A1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(self.ENC_A2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+		self.last_state_a1 = GPIO.input(self.ENC_A1)
+
 		# Initialize PWMA
 		self.pwmA = GPIO.PWM(self.EN_A, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
 		self.pwmA.start(0)
@@ -70,22 +70,22 @@ class DCController(Node):
 		self.pwmB.start(0)
 
 		# Initialize encoder
-		self.thread = threading.Thread(target=self._encoder_thread)
-		self.thread.start()
+		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=self.encoder_callback())
+		
 
-	def _encoder_thread(self):
-		while not self.stop_thread:
-			state_a = GPIO.input(self.ENC_A1)
-			state_b = GPIO.input(self.ENC_A2)
+	def encoder_callback(self):
+		state_a1 = GPIO.input(self.ENC_A1)
+		state_a2 = GPIO.input(self.ENC_A2)
 
-			if state_a == state_b:
+		if state_a1 != self.last_state_a1:  # A has changed
+			if state_a1 == state_a2:
 				self.counter += 1
 			else:
 				self.counter -= 1
-			
-			print(f"Counter: {self.counter}")
 
-			time.sleep(0.001)  # Small delay to prevent high CPU usage
+		self.last_state_a1 = state_a1
+		
+		print(f"Counter: {self.counter}")
 
 	def calculate_rpm(self):
 		current_time = time.time()
@@ -163,8 +163,6 @@ class DCController(Node):
 		GPIO.output(self.IN_4, GPIO.LOW)
 	
 	def destroy(self):
-		self.stop_thread = True
-		self.thread.join()
 		self.pwmA.stop()
 		self.pwmB.stop()
 		GPIO.cleanup()
