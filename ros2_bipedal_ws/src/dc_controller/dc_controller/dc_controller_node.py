@@ -95,7 +95,7 @@ class DCController(Node):
 		# Calculate RPM
 		revolutions = self.counter / self.counts_per_rev
 		self.counter = 0  # Reset counter after calculating RPM
-		self.rpm = (revolutions / elapsed_time) * 60
+		self.rpm = revolutions / (elapsed_time*60)
 
 	def command_callback(self, msg):
 
