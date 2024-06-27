@@ -98,7 +98,7 @@ class DCController(Node):
 			val = GPIO.input(self.ENC_A2)
 			if val == GPIO.LOW and self.direction:
 				self.direction = False  # Reverse
-			elif val == GPIO.HIGH and not Direction:
+			elif val == GPIO.HIGH and not self.direction:
 				self.direction = True  # Forward
 
 		self.enc_A1_last = Lstate
