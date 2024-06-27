@@ -1,6 +1,7 @@
 import smbus2
 import time
 import math
+import numpy as np
 import RPi.GPIO as GPIO
 
 # MPU-9250 Registers and their addresses
@@ -60,7 +61,7 @@ for pin in motor_pins.values():
 def set_servo_angle(pwm, angle):
 	duty = angle / 18 + 2
 	pwm.ChangeDutyCycle(duty)
-	time.sleep(0.5)
+	#time.sleep(0.5)
 	pwm.ChangeDutyCycle(0)
 
 def control_dc_motor(motor_pins, speed, direction):
@@ -102,11 +103,10 @@ try:
 		Gz = gyro_z / 131.0
 
 		# Balancing logic
-		angle_x = math.atan(Ax / math.sqrt(Ay * Ay + Az * Az)) * (180.0 / math.pi)
-		print(angle_x)
-		angle_y = math.atan(Ay / math.sqrt(Ax * Ax + Az * Az)) * (180.0 / math.pi)
+		angle_x = np.arctan2(Ay, Az)
+		angle_x = np.degrees(angle_x)
 
-		angless = [40, 40, 0, 10]
+		angless = [40, -40, 0, -10]
 		# Set servo positions based on angles
 		for i in range(4):
 			set_servo_angle(servo_pwm[i], angless[i])
