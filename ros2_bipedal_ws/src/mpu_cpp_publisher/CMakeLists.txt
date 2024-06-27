@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mpu9250_cpp_publisher)
+project(mpu_cpp_publisher)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
