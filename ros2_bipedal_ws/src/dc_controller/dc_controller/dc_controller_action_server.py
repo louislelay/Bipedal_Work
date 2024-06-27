@@ -1,23 +1,33 @@
+
 import rclpy
-from rclpy.action import ActionServer, CancelResponse
+
+from rclpy.action import ActionServer, CancelResponse, GoalResponse
+from rclpy.callback_groups import ReentrantCallbackGroup
+
 from rclpy.node import Node
+
 from action_bipedal_interface.action import DcController
+
 import RPi.GPIO as GPIO
 import time
+
 from rclpy.executors import MultiThreadedExecutor
 
 class DCControllerActionServer(Node):
 
 	def __init__(self):
 		super().__init__('dc_controller_action_server')
+		self._goal_handle = None
+		self._goal_lock = threading.Lock()
 		self._action_server = ActionServer(
 			self,
 			DcController,
 			'dc_controller',
 			execute_callback=self.execute_callback,
-			handle_accepted_callback=self.handle_accepted_callback,
 			goal_callback=self.goal_callback,
-			cancel_callback=self.cancel_callback)
+			handle_accepted_callback=self.handle_accepted_callback,
+			cancel_callback=self.cancel_callback,
+			callback_group=ReentrantCallbackGroup())
 
 		# GPIO setup
 		self.EN_A = 22         # GPIO pin for L298N enable of Motor A
@@ -143,34 +153,38 @@ class DCControllerActionServer(Node):
 		GPIO.output(self.IN_4, GPIO.LOW)
 	
 	def destroy(self):
-		self.pwmA.stop()
-		self.pwmB.stop()
+		self.stop()
 		GPIO.cleanup()
+		self._action_server.destroy()
+		super().destroy_node()
+
+	def goal_callback(self, goal_request):
+		"""Accept or reject a client request to begin an action."""
+		self.get_logger().info('Received goal request')
+		return GoalResponse.ACCEPT
 
 	def handle_accepted_callback(self, goal_handle):
 		self.get_logger().info('Received new goal')
-		
-		# Cancel the current goal if it exists
-		if self.current_goal_handle:
-			self.get_logger().info('Cancelling current goal')
-			self.current_goal_handle.abort()
+		with self._goal_lock:
+			# This server only allows one goal at a time
+			if self._goal_handle is not None and self._goal_handle.is_active:
+				self.get_logger().info('Aborting previous goal')
+				# Abort the existing goal
+				self._goal_handle.abort()
+			self._goal_handle = goal_handle
 
-		# Accept the new goal
-		self.current_goal_handle = goal_handle
 		goal_handle.execute()
 
-	def goal_callback(self, goal_request):
-		self.get_logger().info('Accepting goal')
-		return rclpy.action.GoalResponse.ACCEPT
-
-	def cancel_callback(self, goal_handle):
-		self.get_logger().info('Cancelling goal')
+	def cancel_callback(self, goal):
+		"""Accept or reject a client request to cancel an action."""
+		self.get_logger().info('Received cancel request')
 		return CancelResponse.ACCEPT
 
 	def execute_callback(self, goal_handle):
 		# PID variables
 		self.integral = 0
 
+		"""Execute the goal."""
 		self.get_logger().info('Executing goal...')
 
 		feedback_msg = DcController.Feedback()
@@ -179,7 +193,11 @@ class DCControllerActionServer(Node):
 		command = goal_handle.request.goal
 		self.setpoint = abs(command)
 
-		while self.setpoint != self.output and rclpy.ok():
+		while self.setpoint != self.output:
+			if not goal_handle.is_active:
+				self.get_logger().info('Goal aborted')
+				return DcController.Result()
+
 			if goal_handle.is_cancel_requested:
 				goal_handle.canceled()
 				self.get_logger().info('Goal canceled')
@@ -198,6 +216,13 @@ class DCControllerActionServer(Node):
 			self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
 			goal_handle.publish_feedback(feedback_msg)
 
+		with self._goal_lock:
+			if not goal_handle.is_active:
+				self.get_logger().info('Goal aborted')
+				return DcController.Result()
+
+			goal_handle.succeed()
+
 		result = DcController.Result()
 		result.final_rpm = feedback_msg.current_rpm
 		goal_handle.succeed()
@@ -208,7 +233,7 @@ def main(args=None):
 
 	dc_controller_action_server = DCControllerActionServer()
 
-	 # Use a MultiThreadedExecutor to enable processing goals concurrently
+	# Use a MultiThreadedExecutor to enable processing goals concurrently
 	executor = MultiThreadedExecutor()
 
 	try:
