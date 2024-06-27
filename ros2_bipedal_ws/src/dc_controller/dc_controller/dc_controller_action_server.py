@@ -2,7 +2,7 @@ import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
 
-from action_bipedal_interfaces.action import dc_controller
+from action_bipedal_interface.action import dc_controller
 
 
 class DCControllerActionServer(Node):
