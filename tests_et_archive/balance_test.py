@@ -3,45 +3,49 @@ import time
 import math
 import numpy as np
 import RPi.GPIO as GPIO
+from mpu9250_jmdev.registers import *
+from mpu9250_jmdev.mpu_9250 import MPU9250
 
 # MPU-9250 Registers and their addresses
-PWR_MGMT_1 = 0x6B
-SMPLRT_DIV = 0x19
-CONFIG = 0x1A
-GYRO_CONFIG = 0x1B
-INT_ENABLE = 0x38
-ACCEL_XOUT_H = 0x3B
-ACCEL_YOUT_H = 0x3D
-ACCEL_ZOUT_H = 0x3F
-GYRO_XOUT_H = 0x43
-GYRO_YOUT_H = 0x45
-GYRO_ZOUT_H = 0x47
-
-bus = smbus2.SMBus(1)
-Device_Address = 0x68
+mpu = MPU9250(
+			address_ak=AK8963_ADDRESS, 
+			address_mpu_master=MPU9050_ADDRESS_68, # In 0x68 Address
+			address_mpu_slave=None, 
+			bus=1,
+			gfs=GFS_1000, 
+			afs=AFS_8G, 
+			mfs=AK8963_BIT_16, 
+			mode=AK8963_MODE_C100HZ)
+	
 
 # Initialize MPU-9250
 def MPU_Init():
-	# Write to sample rate register
-	bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
-	# Write to power management register
-	bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
-	# Write to Configuration register
-	bus.write_byte_data(Device_Address, CONFIG, 0)
-	# Write to Gyro configuration register
-	bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
-	# Write to interrupt enable register
-	bus.write_byte_data(Device_Address, INT_ENABLE, 1)
+	mpu.configure()  # Apply the settings to the registers.
 
-def read_raw_data(addr):
-	# Accelero and Gyro value are 16-bit
-	high = bus.read_byte_data(Device_Address, addr)
-	low = bus.read_byte_data(Device_Address, addr + 1)
-	value = ((high << 8) | low)
-	# to get signed value from mpu6050
-	if value > 32768:
-		value = value - 65536
-	return value
+	pitch = 0
+	roll = 0
+
+	last_time = time.time()
+
+def read_raw_data():
+	accel_data = mpu.readAccelerometerMaster()
+	gyro_data = mpu.readGyroscopeMaster()
+	mag_data = mpu.readMagnetometerMaster()
+
+	return filtered_pitch_roll(accel_data)
+
+def filtered_pitch_roll(accel_data):
+	#GyrYd = gyro_data[1] / 131
+	#GyrYd = float(GyrYd) / 100
+	#pitchGyr = float(pitch - GyrYd)
+	#pitchAcc = float(180/3.141592)*math.atan2(accel_data[0], accel_data[2])
+
+	# Calculate roll (rotation around the x-axis)
+	roll = np.arctan2(accel_data[1], accel_data[2])
+	roll = np.degrees(roll)
+
+	return roll
+	#pitch = 0.9 * pitchGyr + 0.1 * pitchAcc
 
 # Servo Motor Setup
 servo_pins = [25, 18, 24, 23]
@@ -83,29 +87,8 @@ MPU_Init()
 
 try:
 	while True:
-		# Read Accelerometer raw value
-		acc_x = read_raw_data(ACCEL_XOUT_H)
-		acc_y = read_raw_data(ACCEL_YOUT_H)
-		acc_z = read_raw_data(ACCEL_ZOUT_H)
-
-		# Read Gyroscope raw value
-		gyro_x = read_raw_data(GYRO_XOUT_H)
-		gyro_y = read_raw_data(GYRO_YOUT_H)
-		gyro_z = read_raw_data(GYRO_ZOUT_H)
-
-		# Full scale range +/- 250 degree/C as per sensitivity scale factor
-		Ax = acc_x / 16384.0
-		Ay = acc_y / 16384.0
-		Az = acc_z / 16384.0
-
-		Gx = gyro_x / 131.0
-		Gy = gyro_y / 131.0
-		Gz = gyro_z / 131.0
-
-		# Balancing logic
-		angle_x = np.arctan2(Ay, Az)
-		angle_x = np.degrees(angle_x)
-		print(angle_x)
+		roll = read_raw_data()
+		print(roll)
 
 		angless = [40, 180-40, 0, 180-10]
 
@@ -114,9 +97,9 @@ try:
 			set_servo_angle(servo_pwm[i], angless[i])
 
 		# Control DC motors based on tilt
-		if angle_x > 5:
+		if roll > 5:
 			control_dc_motor(motor_pins, 50, 'forward')
-		elif angle_x < -5:
+		elif roll < -5:
 			control_dc_motor(motor_pins, 50, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
