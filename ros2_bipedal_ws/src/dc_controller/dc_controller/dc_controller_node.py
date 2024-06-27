@@ -29,7 +29,7 @@ class DCController(Node):
 		self.ENC_A2 = 17  # GPIO pin for encoder 2 of Motor A
 
 		# Variables for encoder
-		self.counts_per_rev = 8
+		self.counts_per_rev = 1942
 		self.counter = 0
 		self.rpm = 0
 		self.last_time_enc = time.time()
@@ -97,7 +97,7 @@ class DCController(Node):
 		revolutions = self.counter / self.counts_per_rev
 		print(f"counter: {self.counter}")
 		self.counter = 0  # Reset counter after calculating RPM
-		self.rpm = revolutions / (elapsed_time*60)
+		self.rpm = (revolutions / elapsed_time)*60
 
 	def command_callback(self, msg):
 
