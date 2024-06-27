@@ -90,6 +90,7 @@ class DCController(Node):
 	def calculate_rpm(self):
 		current_time = time.time()
 		elapsed_time = current_time - self.last_time_enc
+		print(f"elapsed time: {elapsed_time}")
 		self.last_time_enc = current_time
 
 		# Calculate RPM
