@@ -94,7 +94,7 @@ def PID(input, I, prev_input):
 	PID = int(P+I+D)
 
 	if (PID>100): PID = 100
-	elif (PID<-100): PID = -100
+	elif (PID<0): PID = 0
 
 	return PID, I, prev_input
 
@@ -135,10 +135,10 @@ try:
 			set_servo_angle(servo_pwm[i], angless[i])
 
 		# Control DC motors based on tilt
-		if vit_mot < 0:
-			control_dc_motor(motor_pins, abs(vit_mot), 'forward')
-		elif vit_mot > 0:
-			control_dc_motor(motor_pins, abs(vit_mot), 'backward')
+		if roll < 0:
+			control_dc_motor(motor_pins, vit_mot, 'forward')
+		elif roll > 0:
+			control_dc_motor(motor_pins, vit_mot, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
 
