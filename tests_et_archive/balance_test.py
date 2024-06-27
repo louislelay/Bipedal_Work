@@ -70,11 +70,33 @@ pwmA.start(0)
 pwmB = GPIO.PWM(5, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
 pwmB.start(0)
 
+# PID controller parameters
+I = 0.
+prev_input = 0.
+
 def set_servo_angle(pwm, angle):
 	duty = angle / 18 + 2
 	pwm.ChangeDutyCycle(duty)
 	#time.sleep(0.5)
 	#pwm.ChangeDutyCycle(0)
+
+def PID(self, input, I, prev_input):
+	Kp = 10
+	Ki = 0
+	Kd = 2
+
+	P = Kp * float(input)
+	I += Ki * float(input)
+	D = Kd * (input - prev_input)
+	
+	prev_input = input
+	
+	PID = int(P+I+D)
+
+	if (PID>100): PID = 100
+	elif (PID<-100): PID = -100
+
+	return PID, I, prev_input
 
 def control_dc_motor(motor_pins, speed, direction):
 	if direction == 'forward':
@@ -104,17 +126,19 @@ try:
 		roll = read_raw_data()
 		print(roll)
 
-		angless = [40, 180-40, -10, 180-1]
+		vit_mot, I, prev_input = PID(roll, I, prev_input)
+
+		angless = [40, 180-40, 0, 180-1]
 
 		# Set servo positions based on angles
 		for i in range(4):
 			set_servo_angle(servo_pwm[i], angless[i])
 
 		# Control DC motors based on tilt
-		if roll < -15:
-			control_dc_motor(motor_pins, 100, 'forward')
-		elif roll > -20:
-			control_dc_motor(motor_pins, 100, 'backward')
+		if roll < 0:
+			control_dc_motor(motor_pins, vit_mot, 'forward')
+		elif roll > 0:
+			control_dc_motor(motor_pins, vit_mot, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
 
