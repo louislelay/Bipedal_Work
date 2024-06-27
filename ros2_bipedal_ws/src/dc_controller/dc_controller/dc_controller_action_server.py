@@ -193,7 +193,7 @@ class DCControllerActionServer(Node):
                 self.back()
 
             feedback_msg.current_rpm = int(self.rpm)
-            self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
+            #self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
             goal_handle.publish_feedback(feedback_msg)
 
         result = DcController.Result()
