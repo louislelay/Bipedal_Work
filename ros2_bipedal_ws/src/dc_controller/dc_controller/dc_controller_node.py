@@ -74,21 +74,21 @@ class DCController(Node):
 		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=self.calculate_rpm)
 		
 
-	def encoder_callback(self, channel):
-		state_a1 = GPIO.input(self.ENC_A1)
-		state_a2 = GPIO.input(self.ENC_A2)
+	#def encoder_callback(self, channel):
+		#state_a1 = GPIO.input(self.ENC_A1)
+		#state_a2 = GPIO.input(self.ENC_A2)
 
-		if state_a1 != self.last_state_a1:  # A has changed
-			if state_a1 == state_a2:
-				self.counter += 1
-			else:
-				self.counter -= 1
+		#if state_a1 != self.last_state_a1:  # A has changed
+			#if state_a1 == state_a2:
+			#	self.counter += 1
+			#else:
+			#	self.counter -= 1
 
-		self.last_state_a1 = state_a1
+		#self.last_state_a1 = state_a1
 		
 		#print(f"Counter: {self.counter}")
 
-	def calculate_rpm(self,channel):
+	def calculate_rpm(self, channel):
 		#current_time = time.time()
 		#elapsed_time = current_time - self.last_time_enc
 		#self.last_time_enc = current_time
