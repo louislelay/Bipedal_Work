@@ -35,7 +35,7 @@ class DCController(Node):
 		self.last_time_enc = time.time()
 
 		# PID constants
-		self.kp = 0.5
+		self.kp = 0.8
 		self.ki = 0
 		self.kd = 0.2
 
