@@ -73,7 +73,7 @@ class DCController(Node):
 		GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=self.encoder_callback)
 		
 
-	def encoder_callback(self):
+	def encoder_callback(self, channel):
 		state_a1 = GPIO.input(self.ENC_A1)
 		state_a2 = GPIO.input(self.ENC_A2)
 
