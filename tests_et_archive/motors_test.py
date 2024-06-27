@@ -61,6 +61,33 @@ try:
         set_motor_b(75, "backward")
         print("backward")
         time.sleep(5)
+        
+        set_motor_a(50, "forward")
+        set_motor_b(50, "forward")
+        print("backward")
+        time.sleep(5)
+        
+        
+        set_motor_a(40, "backward")
+        set_motor_b(40, "backward")
+        print("backward")
+        time.sleep(5)
+        
+        set_motor_a(30, "forward")
+        set_motor_b(30, "forward")
+        print("backward")
+        time.sleep(5)
+        
+        
+        set_motor_a(20, "backward")
+        set_motor_b(20, "backward")
+        print("backward")
+        time.sleep(5)
+
+        set_motor_a(10, "forward")
+        set_motor_b(10, "forward")
+        print("backward")
+        time.sleep(5)
 
         stop_motors()
         print("stop")
