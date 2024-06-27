@@ -3,6 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 import RPi.GPIO as GPIO
 import time
+from motor_encoder import MotorEncoder
 
 class DCController(Node):
 
@@ -30,8 +31,8 @@ class DCController(Node):
 
 		# Variables for encoder
 		self.enc_A1_last = GPIO.LOW
-		self.duration = 0
-		self.abs_duration = 0
+		self.rpm = 0
+		self.abs_rpm = 0
 		self.direction = True  # Default direction forward
 
 		# PID constants
@@ -69,6 +70,7 @@ class DCController(Node):
 
 		# Initialize encoder
 		#GPIO.add_event_detect(self.ENC_A1, GPIO.BOTH, callback=encoder_callback)
+		self.encoder = MotorEncoder(pin_a=17, pin_b=18, counts_per_rev=20)
 
 		
 
@@ -80,33 +82,16 @@ class DCController(Node):
 
 		self.setpoint = abs(int(command))
 
+		self.rpm = encoder.calculate_rpm()
+        print(f"Motor RPM: {rpm}")
 
-
-		self.abs_duration = abs(self.duration)
 		self.compute_pid()  # Compute the PID output
 
 		if int(command) > 0 : self.advance()
 		else : self.back()
 
-		print(f"Pulse: {self.duration}")
-		self.duration = 0  # Reset duration for next count
 		time.sleep(1/100*0.001)  # Sleep for 100ms
 
-	def encoder_callback(self):
-		Lstate = GPIO.input(self.ENC_A1)
-		if (self.enc_A1_last == GPIO.LOW) and Lstate == GPIO.HIGH:
-			val = GPIO.input(self.ENC_A2)
-			if val == GPIO.LOW and self.direction:
-				self.direction = False  # Reverse
-			elif val == GPIO.HIGH and not self.direction:
-				self.direction = True  # Forward
-
-		self.enc_A1_last = Lstate
-
-		if not self.direction:
-			self.duration += 1
-		else:
-			self.duration -= 1
 
 
 	def compute_pid(self):		
@@ -114,9 +99,9 @@ class DCController(Node):
 
 		dt = current_time - self.last_time
 
-		self.encoder_callback()
+		self.abs_rpm = abs(self.rpm)
 		
-		error = self.setpoint - self.abs_duration
+		error = self.setpoint - self.abs_rpm
 		self.integral += error * dt
 		derivative = (error - self.prev_error) / dt if dt > 0 else 0
 		
