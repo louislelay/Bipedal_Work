@@ -62,7 +62,7 @@ def set_servo_angle(pwm, angle):
 	duty = angle / 18 + 2
 	pwm.ChangeDutyCycle(duty)
 	#time.sleep(0.5)
-	pwm.ChangeDutyCycle(0)
+	#pwm.ChangeDutyCycle(0)
 
 def control_dc_motor(motor_pins, speed, direction):
 	if direction == 'forward':
@@ -106,7 +106,8 @@ try:
 		angle_x = np.arctan2(Ay, Az)
 		angle_x = np.degrees(angle_x)
 
-		angless = [40, -40, 0, -10]
+		angless = [40, 180-40, 0, 180-10]
+		
 		# Set servo positions based on angles
 		for i in range(4):
 			set_servo_angle(servo_pwm[i], angless[i])
