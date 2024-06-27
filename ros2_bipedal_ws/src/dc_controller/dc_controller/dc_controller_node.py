@@ -13,7 +13,7 @@ class DCController(Node):
 			String, # type of joint (wl, wr) and desired speed
 			'dc_command',
 			self.command_callback,
-		    100)
+			100)
 		self.subscription  # prevent unused variable warning
 
 
@@ -83,7 +83,7 @@ class DCController(Node):
 		self.setpoint = abs(int(command))
 
 		self.rpm = encoder.calculate_rpm()
-        print(f"Motor RPM: {rpm}")
+		print(f"Motor RPM: {rpm}")
 
 		self.compute_pid()  # Compute the PID output
 
