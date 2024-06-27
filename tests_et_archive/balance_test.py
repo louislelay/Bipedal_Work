@@ -63,11 +63,11 @@ for pin in motor_pins.values():
 	GPIO.setup(pin, GPIO.OUT)
 
 # Initialize PWMA
-pwmA = GPIO.PWM(ENA, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+pwmA = GPIO.PWM(22, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
 pwmA.start(0)
 
 # Initialize PWMB
-pwmB = GPIO.PWM(ENB, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+pwmB = GPIO.PWM(5, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
 pwmB.start(0)
 
 def set_servo_angle(pwm, angle):
