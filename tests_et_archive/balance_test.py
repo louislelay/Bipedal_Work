@@ -62,6 +62,14 @@ motor_pins = {'ENA': 22, 'IN1': 26, 'IN2': 6, 'ENB': 5, 'IN3': 12, 'IN4': 16}
 for pin in motor_pins.values():
 	GPIO.setup(pin, GPIO.OUT)
 
+# Initialize PWMA
+pwmA = GPIO.PWM(ENA, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+pwmA.start(0)
+
+# Initialize PWMB
+pwmB = GPIO.PWM(ENB, 1000)  # Initialize PWM on E_LEFT pin 1000Hz frequency
+pwmB.start(0)
+
 def set_servo_angle(pwm, angle):
 	duty = angle / 18 + 2
 	pwm.ChangeDutyCycle(duty)
@@ -79,8 +87,8 @@ def control_dc_motor(motor_pins, speed, direction):
 		GPIO.output(motor_pins['IN1'], GPIO.LOW)
 		GPIO.output(motor_pins['IN2'], GPIO.LOW)
 
-	pwm = GPIO.PWM(motor_pins['ENA'], 1000)
-	pwm.start(speed)
+	pwmA.start(speed)
+	pwmB.start(speed)
 
 # Main loop
 MPU_Init()
@@ -98,9 +106,9 @@ try:
 
 		# Control DC motors based on tilt
 		if roll > 5:
-			control_dc_motor(motor_pins, 50, 'forward')
+			control_dc_motor(motor_pins, 70, 'forward')
 		elif roll < -5:
-			control_dc_motor(motor_pins, 50, 'backward')
+			control_dc_motor(motor_pins, 70, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
 
