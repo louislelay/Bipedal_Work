@@ -11,6 +11,9 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+<depend>rclcpp</depend>
+<depend>std_msgs</depend>
+
 add_executable(mpu9250_cpp_publisher src/mpu9250_cpp_publisher.cpp)
 target_include_directories(mpu9250_cpp_publisher PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -33,3 +36,4 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+
