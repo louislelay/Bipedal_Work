@@ -158,7 +158,7 @@ class DCControllerActionServer(Node):
 		self.get_logger().info('Executing goal...')
 
 		feedback_msg = DcController.Feedback()
-		feedback_msg.current_rpm = self.rpm
+		feedback_msg.current_rpm = int(self.rpm)
 
 		command = goal_handle.request.goal
 		self.setpoint = abs(command)
@@ -173,7 +173,7 @@ class DCControllerActionServer(Node):
 			if int(command) > 0 : self.advance()
 			else : self.back()
 
-			feedback_msg.current_rpm = self.rpm
+			feedback_msg.current_rpm = int(self.rpm)
 			self.get_logger().info('Feedback: {0}'.format(feedback_msg.current_rpm))
 
 			goal_handle.publish_feedback(feedback_msg)
