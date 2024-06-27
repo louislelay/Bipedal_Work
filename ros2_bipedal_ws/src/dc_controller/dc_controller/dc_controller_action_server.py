@@ -4,6 +4,7 @@ from rclpy.node import Node
 from action_bipedal_interface.action import DcController
 import RPi.GPIO as GPIO
 import time
+from rclpy.executors import MultiThreadedExecutor
 
 class DCControllerActionServer(Node):
 
@@ -207,8 +208,11 @@ def main(args=None):
 
 	dc_controller_action_server = DCControllerActionServer()
 
+	 # Use a MultiThreadedExecutor to enable processing goals concurrently
+	executor = MultiThreadedExecutor()
+
 	try:
-		rclpy.spin(dc_controller_action_server)
+		rclpy.spin(dc_controller_action_server, executor=executor)
 	except KeyboardInterrupt:
 		pass
 	finally:
