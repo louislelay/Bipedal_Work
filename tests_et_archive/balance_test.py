@@ -81,9 +81,9 @@ def set_servo_angle(pwm, angle):
 	#pwm.ChangeDutyCycle(0)
 
 def PID(input, I, prev_input):
-	Kp = 10
-	Ki = 4
-	Kd = 0
+	Kp = 50
+	Ki = 10
+	Kd = 5
 
 	P = Kp * (5+float(input))
 	I += Ki * (5+float(input))
