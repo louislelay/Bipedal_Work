@@ -30,7 +30,7 @@ class DCController(Node):
 		self.ENC_A2 = 17  # GPIO pin for encoder 2 of Motor A
 
 		# Variables for encoder
-		self.counts_per_rev = 8
+		self.counts_per_rev = 860*2
 		self.counter = 0
 		self.rpm = 0
 		self.last_time_enc = time.time()
