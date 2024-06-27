@@ -103,6 +103,7 @@ try:
 
         # Balancing logic
         angle_x = math.atan(Ax / math.sqrt(Ay * Ay + Az * Az)) * (180.0 / math.pi)
+		print(angle_x)
         angle_y = math.atan(Ay / math.sqrt(Ax * Ax + Az * Az)) * (180.0 / math.pi)
 
         angless = [40, 40, 0, 10]
@@ -118,7 +119,7 @@ try:
         else:
             control_dc_motor(motor_pins, 0, 'stop')
 
-        time.sleep(0.1)
+        time.sleep(0.001)
 
 except KeyboardInterrupt:
     pass
