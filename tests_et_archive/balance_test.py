@@ -85,8 +85,8 @@ def PID(input, I, prev_input):
 	Ki = 4
 	Kd = 0
 
-	P = Kp * (-2-float(input))
-	I += Ki * (-2-float(input))
+	P = Kp * (5+float(input))
+	I += Ki * (5+float(input))
 	D = Kd * (input - prev_input)
 	
 	prev_input = input
