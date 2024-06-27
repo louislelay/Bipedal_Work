@@ -92,7 +92,7 @@ class DCController(Node):
 		self.duration = 0  # Reset duration for next count
 		time.sleep(1/100*0.001)  # Sleep for 100ms
 
-	def encoder_callback(self, channel):
+	def encoder_callback(self):
 		Lstate = GPIO.input(self.ENC_A1)
 		if (self.enc_A1_last == GPIO.LOW) and Lstate == GPIO.HIGH:
 			val = GPIO.input(self.ENC_A2)
