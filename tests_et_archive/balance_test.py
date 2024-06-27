@@ -111,7 +111,7 @@ try:
 			set_servo_angle(servo_pwm[i], angless[i])
 
 		# Control DC motors based on tilt
-		if roll < 2:
+		if roll < 10:
 			control_dc_motor(motor_pins, 100, 'forward')
 		elif roll > 10:
 			control_dc_motor(motor_pins, 100, 'backward')
