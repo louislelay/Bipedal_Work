@@ -80,12 +80,18 @@ def control_dc_motor(motor_pins, speed, direction):
 	if direction == 'forward':
 		GPIO.output(motor_pins['IN1'], GPIO.HIGH)
 		GPIO.output(motor_pins['IN2'], GPIO.LOW)
+		GPIO.output(motor_pins['IN3'], GPIO.HIGH)
+		GPIO.output(motor_pins['IN4'], GPIO.LOW)
 	elif direction == 'backward':
 		GPIO.output(motor_pins['IN1'], GPIO.LOW)
 		GPIO.output(motor_pins['IN2'], GPIO.HIGH)
+		GPIO.output(motor_pins['IN3'], GPIO.LOW)
+		GPIO.output(motor_pins['IN4'], GPIO.HIGH)
 	else:
 		GPIO.output(motor_pins['IN1'], GPIO.LOW)
 		GPIO.output(motor_pins['IN2'], GPIO.LOW)
+		GPIO.output(motor_pins['IN3'], GPIO.LOW)
+		GPIO.output(motor_pins['IN4'], GPIO.LOW)
 
 	pwmA.start(speed)
 	pwmB.start(speed)
@@ -106,9 +112,9 @@ try:
 
 		# Control DC motors based on tilt
 		if roll > 5:
-			control_dc_motor(motor_pins, 70, 'forward')
+			control_dc_motor(motor_pins, 100, 'forward')
 		elif roll < -5:
-			control_dc_motor(motor_pins, 70, 'backward')
+			control_dc_motor(motor_pins, 100, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
 
