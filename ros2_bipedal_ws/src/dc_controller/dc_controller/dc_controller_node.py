@@ -85,7 +85,7 @@ class DCController(Node):
 
 		self.last_state_a1 = state_a1
 		
-		print(f"Counter: {self.counter}")
+		#print(f"Counter: {self.counter}")
 
 	def calculate_rpm(self):
 		current_time = time.time()
@@ -113,7 +113,7 @@ class DCController(Node):
 		if int(command) > 0 : self.advance()
 		else : self.back()
 
-		time.sleep(1/100*0.001)  # Sleep for 100ms
+		#time.sleep(1/100*0.001)  # Sleep for 100ms
 
 
 
