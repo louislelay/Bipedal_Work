@@ -12,7 +12,7 @@ class DCController(Node):
 			String, # type of joint (wl, wr) and desired speed
 			'dc_command',
 			self.command_callback,
-			100)
+			400)
 		self.subscription  # prevent unused variable warning
 
 
@@ -35,9 +35,9 @@ class DCController(Node):
 		self.last_time_enc = time.time()
 
 		# PID constants
-		self.kp = 0.5
+		self.kp = 0.1
 		self.ki = 0
-		self.kd = 10
+		self.kd = 0.2
 
 		# PID variables
 		self.setpoint = 0	# Speed wanted
@@ -115,7 +115,7 @@ class DCController(Node):
 		if int(command) > 0 : self.advance()
 		else : self.back()
 
-		time.sleep(1/100)  # Sleep for 100ms
+		#time.sleep(1/100)  # Sleep for 100ms
 
 
 
