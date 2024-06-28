@@ -89,7 +89,7 @@ def PID(input, I, prev_input, last_time):
 	current_time = time.time()
 	dt = current_time - last_time
 	
-	error = goal -input
+	error = abs(goal -input)
 
 	
 	P = Kp * error
