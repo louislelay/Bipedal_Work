@@ -1,5 +1,4 @@
 import smbus2
-import time
 import math
 import numpy as np
 import RPi.GPIO as GPIO
@@ -80,7 +79,7 @@ def set_servo_angle(pwm, angle):
 	#time.sleep(0.5)
 	#pwm.ChangeDutyCycle(0)
 
-def PID(input, I, prev_input, last_time):
+def PID(input, I, prev_input):
 	Kp = 5
 	Ki = 0
 	Kd = 0
@@ -99,10 +98,8 @@ def PID(input, I, prev_input, last_time):
 
 	if (PID>100): PID = 100
 	elif (PID<-100): PID = -100
-	
-	last_time = current_time
 
-	return PID, I, prev_input, last_time
+	return PID, I, prev_input
 
 def control_dc_motor(motor_pins, speed, direction):
 	if direction == 'forward':
@@ -131,13 +128,11 @@ MPU_Init()
 
 try:
 	
-	last_time = time.time()
-	
 	while True:
 		roll = read_raw_data()
 		print(roll)
 
-		vit_mot, I, prev_input, last_time = PID(abs(roll), I, prev_input, last_time)
+		vit_mot, I, prev_input = PID(abs(roll), I, prev_input)
 
 		angless = [0, 120, 180, 0]
 
