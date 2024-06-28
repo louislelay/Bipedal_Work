@@ -128,7 +128,7 @@ try:
 
 		vit_mot, I, prev_input = PID(abs(roll), I, prev_input)
 
-		angless = [0, 200, 180, 0]
+		angless = [0, 90, 180, 0]
 
 		# Set servo positions based on angles
 		for i in range(4):
