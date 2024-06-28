@@ -84,7 +84,7 @@ def PID(input, I, prev_input, last_time):
 	Kp = 5
 	Ki = 0.1
 	Kd = 0
-	goal = -10
+	goal = -20
 	
 	current_time = time.time()
 	dt = current_time - last_time
