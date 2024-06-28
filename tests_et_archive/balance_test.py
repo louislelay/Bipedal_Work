@@ -25,7 +25,7 @@ def MPU_Init():
 	pitch = 0
 	roll = 0
 
-	last_time = time.time()
+	
 
 def read_raw_data():
 	accel_data = mpu.readAccelerometerMaster()
@@ -127,7 +127,12 @@ def control_dc_motor(motor_pins, speed, direction):
 # Main loop
 MPU_Init()
 
+
+
 try:
+	
+	last_time = time.time()
+	
 	while True:
 		roll = read_raw_data()
 		print(roll)
