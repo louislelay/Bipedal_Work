@@ -89,7 +89,7 @@ def PID(input, I, prev_input, last_time):
 	current_time = time.time()
 	dt = current_time - last_time
 	
-	error = abs(goal -input)
+	error = goal -input
 
 	
 	P = Kp * error
@@ -101,7 +101,7 @@ def PID(input, I, prev_input, last_time):
 	PID = int(P+I+D)
 
 	if (PID>100): PID = 100
-	elif (PID<0): PID = 0
+	elif (PID<-100): PID = -100
 	
 	last_time = current_time
 
@@ -149,9 +149,9 @@ try:
 			set_servo_angle(servo_pwm[i], angless[i])
 
 		# Control DC motors based on tilt
-		if roll < 0:
+		if vit_mot < 0:
 			control_dc_motor(motor_pins, vit_mot, 'forward')
-		elif roll > 0:
+		elif vit_mot > 0:
 			control_dc_motor(motor_pins, vit_mot, 'backward')
 		else:
 			control_dc_motor(motor_pins, 0, 'stop')
