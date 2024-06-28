@@ -80,14 +80,18 @@ def set_servo_angle(pwm, angle):
 	#time.sleep(0.5)
 	#pwm.ChangeDutyCycle(0)
 
-def PID(input, I, prev_input):
+def PID(input, I, prev_input, last_time):
 	Kp = 5
 	Ki = 7
 	Kd = 10
+	
+	current_time = time.time()
+	dt = current_time - last_time
 
+	
 	P = Kp * (float(input))
-	I += Ki * (float(input))
-	D = Kd * (input - prev_input)
+	I += Ki * (float(input)) * dt
+	D = Kd * (input - prev_input) / dt if dt > 0 else 0
 	
 	prev_input = input
 	
@@ -95,8 +99,10 @@ def PID(input, I, prev_input):
 
 	if (PID>100): PID = 100
 	elif (PID<0): PID = 0
+	
+	last_time = current_time
 
-	return PID, I, prev_input
+	return PID, I, prev_input, last_time
 
 def control_dc_motor(motor_pins, speed, direction):
 	if direction == 'forward':
@@ -126,7 +132,7 @@ try:
 		roll = read_raw_data()
 		print(roll)
 
-		vit_mot, I, prev_input = PID(abs(roll), I, prev_input)
+		vit_mot, I, prev_input, last_time = PID(abs(roll), I, prev_input, last_time)
 
 		angless = [0, 120, 180, 0]
 
