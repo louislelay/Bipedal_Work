@@ -82,8 +82,8 @@ def set_servo_angle(pwm, angle):
 
 def PID(input, I, prev_input, last_time):
 	Kp = 5
-	Ki = 7
-	Kd = 10
+	Ki = 0
+	Kd = 0
 	goal = 10
 	
 	current_time = time.time()
