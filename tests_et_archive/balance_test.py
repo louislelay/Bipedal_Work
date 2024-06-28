@@ -86,15 +86,12 @@ def PID(input, I, prev_input, last_time):
 	Kd = 0
 	goal = -20
 	
-	current_time = time.time()
-	dt = current_time - last_time
-	
-	error = goal -input
+	error = -goal +input
 
 	
 	P = Kp * error
-	I += Ki * (error) * dt
-	D = Kd * (input - prev_input) / dt if dt > 0 else 0
+	I += Ki * (error)
+	D = Kd * (input - prev_input)
 	
 	prev_input = input
 	
